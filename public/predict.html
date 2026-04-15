@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prediction — HeartGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:        #1d4ed8;
+      --blue-hover:  #1e40af;
+      --blue-light:  #eff6ff;
+      --blue-mid:    #bfdbfe;
+      --border:      #e2e8f0;
+      --bg:          #f0f4fb;
+      --white:       #ffffff;
+      --text:        #0f172a;
+      --text-sub:    #64748b;
+      --text-muted:  #94a3b8;
+      --slate-light: #f8fafc;
+      --success:     #059669;
+      --warning:     #d97706;
+      --danger:      #dc2626;
+      --teal:        #0d9488;
+      --teal-light:  #f0fdfa;
+      --radius:      14px;
+      --radius-sm:   9px;
+      --shadow:      0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
+
+    /* ── SIDEBAR ── */
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; flex-shrink: 0; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-mark { width: 36px; height: 36px; background: var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+    .logo-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text); }
+    .sidebar-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 0 0.75rem; margin: 1rem 0 0.5rem; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-sub); cursor: pointer; transition: all 0.15s; text-decoration: none; margin-bottom: 2px; }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .nav-item:hover { background: var(--slate-light); color: var(--text); }
+    .nav-item.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
+    .user-row { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 34px; height: 34px; background: var(--blue-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--blue); }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-email { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 11px; color: var(--text-muted); }
+    .sign-out-btn { background: none; border: none; cursor: pointer; padding: 4px; color: var(--text-muted); }
+    .sign-out-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .sign-out-btn:hover { color: var(--danger); }
+
+    /* ── MAIN ── */
+    .main { margin-left: 240px; flex: 1; padding: 2rem 2.5rem; max-width: calc(100vw - 240px); }
+
+    /* ── PAGE HEADER ── */
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; }
+    .page-title { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--text); letter-spacing: -0.5px; margin-bottom: 4px; }
+    .page-sub { font-size: 14px; color: var(--text-sub); }
+
+    /* ── ALERT ── */
+    .alert-inline { font-size: 13px; color: var(--danger); background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-sm); padding: 10px 14px; display: none; margin-bottom: 1.25rem; }
+    .alert-inline.show { display: block; animation: rise 0.25s ease both; }
+
+    /* ── IoT SOURCE CARD ── */
+    .iot-source-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; }
+    .iot-source-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--teal) 0%, #0891b2 100%); }
+    .iot-source-title { font-size: 14px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
+    .iot-source-title svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+    .iot-source-sub { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+    .iot-source-body { padding: 1.25rem 1.5rem; }
+
+    /* ── STAT CARDS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; box-shadow: var(--shadow); }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); line-height: 1; margin-bottom: 4px; }
+    .stat-desc { font-size: 12px; color: var(--text-sub); }
+    .stat-card.risk-high .stat-value { color: var(--danger); }
+    .stat-card.risk-mid  .stat-value { color: var(--warning); }
+    .stat-card.risk-low  .stat-value { color: var(--success); }
+
+    /* ── CARDS ── */
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card-header { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .card-body { padding: 1.5rem; }
+
+    /* ── GRID LAYOUTS ── */
+    .grid-2   { display: grid; grid-template-columns: 1fr 1fr;     gap: 1.25rem; margin-bottom: 1.25rem; }
+    .grid-3   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+
+    /* ── DISEASE CARDS GRID ── */
+    .disease-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── GAUGE ── */
+    .gauge-wrap { position: relative; width: 180px; height: 100px; margin: 0 auto 1rem; }
+    .gauge-svg { width: 180px; height: 100px; }
+    .gauge-percent { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--text); }
+    .gauge-label { text-align: center; font-size: 12px; color: var(--text-sub); }
+
+    /* ── RISK BADGE ── */
+    .risk-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .risk-badge.high   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .risk-badge.medium { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+    .risk-badge.low    { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .risk-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .risk-badge.high   .risk-dot { background: var(--danger); }
+    .risk-badge.medium .risk-dot { background: var(--warning); }
+    .risk-badge.low    .risk-dot { background: var(--success); }
+
+    /* ── FACTOR BARS ── */
+    .factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .factor-name { font-size: 12px; color: var(--text-sub); width: 110px; flex-shrink: 0; }
+    .factor-track { flex: 1; height: 7px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .factor-fill { height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+    .factor-val { font-size: 12px; font-weight: 600; color: var(--text); width: 36px; text-align: right; flex-shrink: 0; }
+
+    /* ── AI PANEL ── */
+    .ai-thinking { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; }
+    .ai-dots span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); animation: pulse 1.2s infinite; margin: 0 2px; }
+    .ai-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1)} }
+    .ai-section { margin-bottom: 1.1rem; }
+    .ai-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--blue); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .ai-section-title svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .ai-text { font-size: 13.5px; line-height: 1.8; color: var(--text); }
+
+    /* ── HISTORY TABLE ── */
+    .history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .history-table th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    .history-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: var(--slate-light); }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 20px; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; border: none; }
+    .btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(29,78,216,0.25); }
+    .btn-primary:hover { background: var(--blue-hover); transform: translateY(-1px); }
+    .btn-sm { padding: 7px 14px; font-size: 13px; }
+    .btn:active { transform: scale(0.98); }
+
+    /* ── PLACEHOLDER ── */
+    .placeholder { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 13px; }
+    .placeholder svg { width: 36px; height: 36px; stroke: var(--text-muted); fill: none; stroke-width: 1.5; margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes rise { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .animate { animation: rise 0.4s cubic-bezier(0.16,1,0.3,1) both; }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.10s; }
+    .d3 { animation-delay: 0.15s; }
+    .d4 { animation-delay: 0.20s; }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo">
+        <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg></div>
+        <span class="logo-name">HeartGuard</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main</div>
+      <a href="index.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+      <a href="predict.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Predictions
+      </a>
+      <a href="profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        IoT Data
+      </a>
+      <div class="nav-label">Settings</div>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Settings
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar" id="sideAvatar">U</div>
+        <div class="user-info">
+          <div class="user-email" id="sideEmail">user@email.com</div>
+          <div class="user-role">Patient</div>
+        </div>
+        <button class="sign-out-btn" onclick="signOut()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- Page Header -->
+    <div class="page-header animate">
+      <div>
+        <h1 class="page-title">Heart Risk Prediction</h1>
+        <p class="page-sub">Uses your latest IoT sensor reading and medical profile from the database automatically.</p>
+      </div>
+      <button class="btn btn-primary" onclick="runPrediction()" id="runBtn">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Run Prediction
+      </button>
+    </div>
+
+    <!-- Error Alert -->
+    <div id="inputAlert" class="alert-inline"></div>
+
+    <!-- IoT Source Card -->
+    <div class="iot-source-card animate d1">
+      <div class="iot-source-header">
+        <div>
+          <div class="iot-source-title">
+            <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="white"/></svg>
+            IoT Sensor Data — Used for Prediction
+          </div>
+          <div class="iot-source-sub">Fetched automatically from your latest recorded device reading</div>
+        </div>
+        <button class="btn btn-sm" style="background:rgba(255,255,255,0.18);color:white;border:1px solid rgba(255,255,255,0.3);" onclick="runPrediction()" id="predictBtn">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Predict
+        </button>
+      </div>
+      <div class="iot-source-body">
+        <div id="iotDataCard">
+          <div class="placeholder" style="padding:1.25rem 0;">
+            <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+            <div>Loading latest IoT reading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initial Placeholder -->
+    <div id="initialPlaceholder" class="card animate d2">
+      <div class="card-body">
+        <div class="placeholder" style="padding:3rem 1rem;">
+          <svg viewBox="0 0 24 24" style="width:48px;height:48px;margin-bottom:12px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;">Ready to predict</div>
+          <div style="max-width:380px;margin:0 auto 1.5rem;line-height:1.7;">
+            Your latest IoT reading is shown above. Click <strong>Run Prediction</strong> to get your full heart disease risk analysis, 5 disease probabilities, AI insights and charts.
+          </div>
+          <a href="profile.html" style="font-size:13px;color:var(--teal);font-weight:500;text-decoration:none;">
+            Log a new IoT reading on the Profile page
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ RESULTS (hidden until prediction runs) ═══════════ -->
+    <div id="resultsSection" style="display:none;">
+
+      <!-- Stat Cards -->
+      <div class="stats-row animate d1">
+        <div class="stat-card" id="statRisk">
+          <div class="stat-label">Overall Risk Score</div>
+          <div class="stat-value" id="statRiskVal">—</div>
+          <div class="stat-desc"  id="statRiskDesc">Heart disease probability</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Heart Rate</div>
+          <div class="stat-value" id="statThalach">—</div>
+          <div class="stat-desc">bpm (max)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">SpO2</div>
+          <div class="stat-value" id="statSpo2">—</div>
+          <div class="stat-desc">% blood oxygen</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Temperature</div>
+          <div class="stat-value" id="statTemp">—</div>
+          <div class="stat-desc">Body temperature</div>
+        </div>
+      </div>
+
+      <!-- ROW 1: Gauge + Factor Bars -->
+      <div class="grid-2 animate d2">
+        <!-- Gauge -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Overall Disease Risk</div><div class="card-sub">Composite ML score across all parameters</div></div>
+            <div id="riskBadge"></div>
+          </div>
+          <div class="card-body" style="text-align:center;">
+            <div class="gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 180 100">
+                <path d="M20 90 A70 70 0 0 1 160 90" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugePath" d="M20 90 A70 70 0 0 1 160 90" fill="none" stroke="#dc2626" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1);"/>
+              </svg>
+              <div class="gauge-percent" id="gaugeText">—</div>
+            </div>
+            <div class="gauge-label" id="gaugeLabel">Run a prediction to see your risk score</div>
+            <div style="margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;text-align:center;">
+              <div><div style="width:10px;height:10px;border-radius:50%;background:#059669;margin:0 auto 3px;"></div><span style="color:var(--text-sub);">Low &lt;35%</span></div>
+              <div><div style="width:10px;height:10px;border-radius:50%;background:#d97706;margin:0 auto 3px;"></div><span style="color:var(--text-sub);">Medium 35–65%</span></div>
+              <div><div style="width:10px;height:10px;border-radius:50%;background:#dc2626;margin:0 auto 3px;"></div><span style="color:var(--text-sub);">High &gt;65%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Factor Bars -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Risk Factor Contributions</div><div class="card-sub">How each parameter influences the result</div></div>
+          </div>
+          <div class="card-body" id="factorBars">
+            <div class="placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="17" y="5" width="4" height="16" rx="1"/></svg>
+              <div>Run a prediction to see factor breakdown</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: Disease Breakdown — Donut + Cards -->
+      <div class="card animate d2" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div><div class="card-title">Disease-Specific Risk Breakdown</div><div class="card-sub">Individual probability for 5 cardiovascular conditions</div></div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:260px 1fr;gap:2rem;align-items:center;">
+            <div><canvas id="donutChart" height="260"></canvas></div>
+            <div id="diseaseCards" class="disease-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 3: Bar + Radar Charts -->
+      <div class="grid-2 animate d3">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Vital Signs vs Normal Range</div><div class="card-sub">Your readings compared to healthy baseline</div></div>
+          <div class="card-body"><canvas id="barChart" height="220"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Health Profile Overview</div><div class="card-sub">Multi-dimensional health radar</div></div>
+          <div class="card-body"><canvas id="radarChart" height="220"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ROW 4: AI Insights (Gemini) -->
+      <div class="card animate d3" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">AI Health Insights</div>
+            <div class="card-sub">Powered by Google Gemini — analysed from your profile and sensor data</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
+            <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Not a medical diagnosis
+          </div>
+        </div>
+        <div class="card-body" id="geminiPanel">
+          <div class="placeholder">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6a6 6 0 0 1 6 6"/><circle cx="12" cy="12" r="2"/></svg>
+            <div>AI insights will appear after prediction</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 5: IoT History -->
+      <div class="card animate d4">
+        <div class="card-header">
+          <div><div class="card-title">IoT Reading History</div><div class="card-sub">Last 10 readings from your device</div></div>
+          <button class="btn btn-sm btn-primary" onclick="loadHistory()">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+            Refresh
+          </button>
+        </div>
+        <div style="padding:0;" id="historyPanel">
+          <div class="placeholder">Loading history...</div>
+        </div>
+      </div>
+
+    </div><!-- /resultsSection -->
+
+  </main>
+</div>
+
+<script src="js/predict.js"></script>
+</body>
+</html>

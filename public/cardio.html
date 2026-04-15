@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HeartGuard | Cardiac Analysis Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "secondary-fixed": "#9cf5c1",
+        "surface-container-high": "#dce9ff",
+        "tertiary-fixed-dim": "#ffb95f",
+        "background": "#f8f9ff",
+        "secondary-container": "#99f2bf",
+        "surface-dim": "#cbdbf5",
+        "surface-tint": "#226b47",
+        "on-secondary-fixed-variant": "#005232",
+        "tertiary": "#533200",
+        "on-primary-fixed": "#002111",
+        "surface-variant": "#d3e4fe",
+        "on-tertiary-fixed-variant": "#653e00",
+        "on-surface-variant": "#404942",
+        "on-primary-fixed-variant": "#005232",
+        "on-secondary": "#ffffff",
+        "outline-variant": "#bfc9c0",
+        "primary-fixed": "#a9f3c5",
+        "on-secondary-fixed": "#002111",
+        "surface-container-highest": "#d3e4fe",
+        "tertiary-container": "#724700",
+        "on-tertiary-container": "#ffb451",
+        "surface-bright": "#f8f9ff",
+        "primary-container": "#0d5c3a",
+        "on-secondary-container": "#087148",
+        "primary-fixed-dim": "#8ed6aa",
+        "inverse-on-surface": "#eaf1ff",
+        "surface-container": "#e5eeff",
+        "surface-container-low": "#eff4ff",
+        "on-surface": "#0b1c30",
+        "error-container": "#ffdad6",
+        "on-primary-container": "#8ad2a7",
+        "surface-container-lowest": "#ffffff",
+        "surface": "#f8f9ff",
+        "on-error": "#ffffff",
+        "tertiary-fixed": "#ffddb8",
+        "secondary": "#006d44",
+        "on-background": "#0b1c30",
+        "outline": "#707971",
+        "inverse-primary": "#8ed6aa",
+        "on-primary": "#ffffff",
+        "on-error-container": "#93000a",
+        "primary": "#004328",
+        "error": "#ba1a1a",
+        "inverse-surface": "#213145",
+        "on-tertiary-fixed": "#2a1700",
+        "on-tertiary": "#ffffff",
+        "secondary-fixed-dim": "#80d8a7"
+      },
+      "fontFamily": {
+        "headline": ["Fraunces", "serif"],
+        "body": ["DM Sans", "sans-serif"],
+        "label": ["DM Sans", "sans-serif"]
+      }
+    },
+  },
+}
+</script>
+<style>
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.font-serif { font-family: 'Fraunces', serif; }
+.font-sans { font-family: 'DM Sans', sans-serif; }
+.glass-nav {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.ghost-border {
+  border: 1px solid rgba(22, 163, 74, 0.18);
+}
+.primary-gradient {
+  background: linear-gradient(135deg, #004328 0%, #0d5c3a 100%);
+}
+</style>
+</head>
+<body class="bg-surface font-sans text-on-surface selection:bg-secondary-fixed">
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 glass-nav shadow-sm">
+  <div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
+    <div class="text-2xl font-serif font-black text-primary flex items-center gap-2">
+      <span class="text-3xl">🫀</span>
+      <span>HeartGuard</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="bg-primary text-on-primary font-bold px-6 py-2.5 rounded-full primary-gradient hover:shadow-lg transition-all" onclick="loadAll()">
+        <span class="material-symbols-outlined text-lg align-middle mr-1" style="display:inline;">refresh</span>
+        Refresh
+      </button>
+      <a href="/" class="text-primary font-semibold px-4 py-2 hover:opacity-80 transition-opacity">← Home</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<main class="pt-24 pb-16">
+  <div class="max-w-7xl mx-auto px-8">
+    
+    <!-- Stat Strip -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+        <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Total Records</div>
+        <div class="text-3xl font-serif font-bold text-primary" id="statTotal">—</div>
+        <div class="text-xs text-on-surface-variant mt-2 font-medium">from final_data</div>
+      </div>
+      <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+        <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">High / Critical</div>
+        <div class="text-3xl font-serif font-bold text-error" id="statHigh">—</div>
+        <div class="text-xs text-on-surface-variant mt-2 font-medium">need attention</div>
+      </div>
+      <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+        <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Avg Risk Score</div>
+        <div class="text-3xl font-serif font-bold text-primary" id="statAvg">—</div>
+        <div class="text-xs text-on-surface-variant mt-2 font-medium">across all patients</div>
+      </div>
+      <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+        <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Latest Entry</div>
+        <div class="text-2xl font-serif font-bold text-primary" id="statLatest">—</div>
+        <div class="text-xs text-on-surface-variant mt-2 font-medium" id="statLatestSub">—</div>
+      </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Patient List Panel -->
+      <div class="lg:col-span-1 bg-surface-container rounded-2xl shadow-md overflow-hidden ghost-border flex flex-col">
+        <div class="px-6 py-4 border-b border-outline-variant/30">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Patient Records</h3>
+          <span id="listCount" class="text-xs text-on-surface-variant font-medium"></span>
+        </div>
+        <div class="patient-list overflow-y-auto flex-1 max-h-96" id="patientList">
+          <!-- skeleton rows -->
+          <div class="px-6 py-4 border-b border-outline-variant/20">
+            <div class="h-3 bg-gradient-to-r from-surface-dim to-surface-container rounded mb-2 w-3/4 animate-pulse"></div>
+            <div class="h-2 bg-gradient-to-r from-surface-dim to-surface-container rounded w-1/2 animate-pulse"></div>
+          </div>
+          <div class="px-6 py-4">
+            <div class="h-3 bg-gradient-to-r from-surface-dim to-surface-container rounded mb-2 w-2/3 animate-pulse"></div>
+            <div class="h-2 bg-gradient-to-r from-surface-dim to-surface-container rounded w-1/2 animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Panel -->
+      <div class="lg:col-span-2 space-y-6" id="detailPanel">
+        <div class="bg-surface-container rounded-2xl p-12 text-center shadow-md ghost-border">
+          <div class="text-4xl mb-4 opacity-50">♡</div>
+          <div class="text-on-surface-variant font-medium">Select a patient to view their full cardiac analysis</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script>
+/* ════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════ */
+let patients = [];
+let activeId = null;
+
+/* Risk level to color mapping */
+const riskColors = {
+  Low: { bg: 'bg-secondary-fixed/20', text: 'text-secondary', badge: 'bg-secondary-fixed/30 text-secondary border-secondary/30' },
+  Moderate: { bg: 'bg-tertiary-fixed-dim/20', text: 'text-tertiary', badge: 'bg-tertiary-fixed-dim/30 text-tertiary border-tertiary/30' },
+  High: { bg: 'bg-error/20', text: 'text-error', badge: 'bg-error/20 text-error border-error/30' },
+  Critical: { bg: 'bg-error/30', text: 'text-error', badge: 'bg-error/30 text-error border-error/50' }
+};
+
+/* ════════════════════════════════════════════════════
+   LOAD ALL PATIENTS
+════════════════════════════════════════════════════ */
+async function loadAll(){
+  document.getElementById("patientList").innerHTML = skeletons(5);
+  document.getElementById("detailPanel").innerHTML = `
+    <div class="bg-surface-container rounded-2xl p-12 text-center shadow-md ghost-border">
+      <div class="inline-flex items-center gap-2 text-on-surface-variant">
+        <div class="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+        Loading records…
+      </div>
+    </div>
+  `;
+
+  try{
+    const res  = await fetch("/cardio/patients");
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error);
+    patients = data.patients;
+    renderList();
+    renderStats();
+    if(patients.length) openPatient(patients[0].id);
+  } catch(e){
+    document.getElementById("patientList").innerHTML =
+      `<div class="px-6 py-8 text-center"><div class="text-error text-sm font-medium">⚠ ${e.message}</div></div>`;
+  }
+}
+
+function skeletons(n){
+  return Array.from({length:n}).map(()=>`
+    <div class="px-6 py-4 border-b border-outline-variant/20">
+      <div class="h-3 bg-gradient-to-r from-surface-dim to-surface-container rounded mb-2 w-3/4 animate-pulse"></div>
+      <div class="h-2 bg-gradient-to-r from-surface-dim to-surface-container rounded w-1/2 animate-pulse"></div>
+    </div>`).join("");
+}
+
+/* ════════════════════════════════════════════════════
+   RENDER PATIENT LIST
+════════════════════════════════════════════════════ */
+function renderList(){
+  document.getElementById("listCount").textContent = patients.length + " records";
+  const el = document.getElementById("patientList");
+  el.innerHTML = patients.map(p => {
+    const initials = `P${p.age||"?"}`;
+    const colors = riskColors[p.risk_level] || riskColors.Moderate;
+    const pct = p.error ? "?" : p.risk_percentage + "%";
+    const ts = p.created_at ? new Date(p.created_at).toLocaleDateString("en-IN",{day:"2-digit",month:"short"}) : "—";
+    return `
+      <div class="patient-row px-6 py-4 cursor-pointer transition-colors border-b border-outline-variant/20 hover:bg-surface-container-low${activeId===p.id ? ' bg-primary/5 border-l-4 border-l-primary' : ''}" onclick="openPatient('${p.id}')" data-id="${p.id}">
+        <div class="flex items-center gap-4">
+          <div class="w-2 h-2 rounded-full flex-shrink-0 ${colors.text.replace('text-', 'bg-')}"></div>
+          <div class="w-10 h-10 rounded-xl ${colors.bg} flex items-center justify-center flex-shrink-0 font-bold text-sm ${colors.text}">
+            ${initials}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-on-surface">Age ${p.age||"?"} · ${p.sex===1?"Male":"Female"}</div>
+            <div class="text-xs text-on-surface-variant font-medium">${ts} · BP ${p.trestbps||"?"} · Chol ${p.chol||"?"}</div>
+          </div>
+          <div class="font-bold text-sm ${colors.text} flex-shrink-0">${pct}</div>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+/* ════════════════════════════════════════════════════
+   RENDER STATS STRIP
+════════════════════════════════════════════════════ */
+function renderStats(){
+  document.getElementById("statTotal").textContent = patients.length;
+  const high = patients.filter(p=>p.risk_level==="High"||p.risk_level==="Critical").length;
+  document.getElementById("statHigh").textContent = high;
+  const valid = patients.filter(p=>!p.error&&p.risk_percentage!=null);
+  const avg = valid.length ? (valid.reduce((a,p)=>a+p.risk_percentage,0)/valid.length).toFixed(1) : "—";
+  document.getElementById("statAvg").textContent = avg + (valid.length?"%":"");
+  if(patients.length){
+    const latest = patients[0];
+    document.getElementById("statLatest").textContent = `${latest.risk_percentage??'?'}%`;
+    document.getElementById("statLatestSub").textContent = `Age ${latest.age}, ${latest.risk_level||"—"}`;
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   OPEN PATIENT DETAIL
+════════════════════════════════════════════════════ */
+async function openPatient(id){
+  activeId = id;
+  document.querySelectorAll(".patient-row").forEach(r=>{
+    r.classList.toggle("bg-primary/5", r.dataset.id===id);
+    r.classList.toggle("border-l-4", r.dataset.id===id);
+    r.classList.toggle("border-l-primary", r.dataset.id===id);
+  });
+  const dp = document.getElementById("detailPanel");
+  dp.innerHTML = `
+    <div class="bg-surface-container rounded-2xl p-12 text-center shadow-md ghost-border">
+      <div class="inline-flex items-center gap-2 text-on-surface-variant">
+        <div class="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+        Loading full analysis…
+      </div>
+    </div>
+  `;
+
+  try{
+    const res = await fetch(`/cardio/patient/${id}`);
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error);
+    renderDetail(data);
+  } catch(e){
+    dp.innerHTML = `<div class="bg-error/10 rounded-2xl p-8 text-center"><div class="text-error text-sm font-medium">⚠ ${e.message}</div></div>`;
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   RENDER DETAIL
+════════════════════════════════════════════════════ */
+function renderDetail(d){
+  const row = d.row || {};
+  const g = d.gemini || {};
+  const dp = document.getElementById("detailPanel");
+  const colors = riskColors[d.risk_level] || riskColors.Moderate;
+
+  // ── vitals ──────────────────────────────────────
+  function vital(label, val, unit, flagged){
+    return `<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant/20${flagged?' border-error/50':' '}">
+      <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">${label}</div>
+      <div class="text-lg font-bold ${flagged ? 'text-error' : 'text-primary'}">${val??'—'}<span class="text-xs text-on-surface-variant ml-1">${unit}</span></div>
+    </div>`;
+  }
+  const vitalsHtml = [
+    vital("Age", row.age, "yrs", false),
+    vital("Sex", row.sex===1?"M":"F", "", false),
+    vital("BP", row.trestbps, "mmHg", row.trestbps>140),
+    vital("Cholesterol", row.chol, "mg/dL", row.chol>240),
+    vital("Chest Pain", row.cp, "type", row.cp>=2),
+    vital("Exer. Angina", row.exang===1?"Yes":"No", "", row.exang===1),
+    vital("ST Depress", row.oldpeak??'N/A', "", row.oldpeak>2),
+    vital("ECG", row.restecg??'N/A', "", false),
+  ].join("");
+
+  // ── disease bars ─────────────────────────────────
+  const disHtml = (d.disease_breakdown||[]).map(dis=>`
+    <div>
+      <div class="flex justify-between mb-1.5 text-sm">
+        <span class="text-on-surface-variant font-medium">${dis.name}</span>
+        <span class="text-error font-bold">${dis.pct}%</span>
+      </div>
+      <div class="w-full h-2 bg-outline-variant/20 rounded-full overflow-hidden">
+        <div class="bar-fill h-full rounded-full bg-gradient-to-r from-tertiary to-error w-0 transition-all duration-1000" data-w="${dis.pct}"></div>
+      </div>
+    </div>`).join("");
+
+  // ── recommendations & lifestyle ──────────────────
+  const recHtml = (g.recommendations||[]).map(r=>`<li class="flex gap-3 items-start text-sm text-on-surface"><span class="text-primary font-bold flex-shrink-0 mt-1">→</span><span>${r}</span></li>`).join("");
+  const lifeHtml = (g.lifestyle||[]).map(l=>`<li class="flex gap-3 items-start text-sm text-on-surface"><span class="text-secondary font-bold flex-shrink-0 mt-1">•</span><span>${l}</span></li>`).join("");
+
+  // ── urgency ──────────────────────────────────────
+  const urg = g.urgency || "Soon";
+  const urgColors = {
+    'Routine': 'bg-secondary-fixed/20 text-secondary border border-secondary/30',
+    'Soon': 'bg-tertiary-fixed-dim/20 text-tertiary border border-tertiary/30',
+    'Urgent': 'bg-error/20 text-error border border-error/30',
+    'Emergency': 'bg-error/30 text-error border-2 border-error animate-pulse'
+  };
+
+  // ── timestamp ────────────────────────────────────
+  const ts = row.created_at
+    ? new Date(row.created_at).toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})
+    : "—";
+
+  dp.innerHTML = `
+    <!-- Risk Overview -->
+    <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-1 h-6 bg-primary rounded-sm"></div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Risk Overview · ${ts}</h3>
+      </div>
+      <div class="flex flex-col md:flex-row gap-6 items-start">
+        <div class="flex-shrink-0">
+          <svg class="w-40 h-24" viewBox="0 0 160 90">
+            <defs>
+              <linearGradient id="gGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#006d44"/>
+                <stop offset="50%" stop-color="#ffb340"/>
+                <stop offset="100%" stop-color="#ba1a1a"/>
+              </linearGradient>
+            </defs>
+            <path d="M 16 84 A 64 64 0 0 1 144 84"
+                  fill="none" stroke="#e5eeff" stroke-width="10" stroke-linecap="round"/>
+            <path id="gFill" d="M 16 84 A 64 64 0 0 1 144 84"
+                  fill="none" stroke="url(#gGrad)" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="201" stroke-dashoffset="201"/>
+          </svg>
+          <div class="text-center -mt-8">
+            <div class="text-2xl font-bold text-primary font-serif" id="gPct">0%</div>
+            <div class="text-xs text-on-surface-variant font-medium uppercase">risk</div>
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full ${colors.badge} border mb-4">
+            <span class="font-bold text-sm">${d.risk_level || "—"}</span>
+          </div>
+          <div class="space-y-2 text-sm text-on-surface-variant">
+            <div>No-disease probability: <span class="text-secondary font-bold">${d.no_disease_pct??'?'}%</span></div>
+            <div>Flagged readings: <span class="font-bold ${(d.flagged_features||[]).length>0?'text-error':'text-secondary'}">${(d.flagged_features||[]).length}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vitals -->
+    <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-1 h-6 bg-primary rounded-sm"></div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Patient Vitals</h3>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">${vitalsHtml}</div>
+    </div>
+
+    <!-- Disease Breakdown -->
+    <div class="bg-surface-container rounded-2xl p-6 shadow-md ghost-border">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-1 h-6 bg-primary rounded-sm"></div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Disease Type Breakdown</h3>
+      </div>
+      <div class="space-y-4">${disHtml}</div>
+    </div>
+
+    <!-- Gemini -->
+    <div class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl p-6 shadow-md ghost-border border-primary/20">
+      <div class="flex items-start justify-between gap-4 mb-6">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 rounded-xl primary-gradient flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-on-surface"> Clinical AI</h3>
+            <p class="text-xs text-on-surface-variant font-medium">AI-assisted cardiologist interpretation</p>
+          </div>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${urgColors[urg] || urgColors['Soon']}">${urg}</span>
+      </div>
+
+      <div class="bg-primary/10 border-l-2 border-primary p-4 rounded-lg mb-6">
+        <p class="text-sm text-on-surface leading-relaxed">${g.summary||" analysis unavailable."}</p>
+      </div>
+
+      <div class="bg-error/10 rounded-lg p-4 mb-6 border border-error/20">
+        <div class="text-xs font-bold uppercase tracking-widest text-error mb-1">Primary Concern</div>
+        <div class="text-sm font-semibold text-on-surface">${g.primaryConcern||"—"}</div>
+      </div>
+
+      <div class="mb-6">
+        <h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">Clinical Recommendations</h4>
+        <ul class="space-y-2">${recHtml||'<li class="text-sm text-on-surface">No recommendations available.</li>'}</ul>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">Lifestyle Changes</h4>
+        <ul class="space-y-2">${lifeHtml||'<li class="text-sm text-on-surface">No lifestyle data available.</li>'}</ul>
+      </div>
+
+      ${g.disclaimer?`<div class="mt-6 pt-6 border-t border-outline-variant/20"><p class="text-xs text-on-surface-variant font-medium leading-relaxed">${g.disclaimer}</p></div>`:''}
+    </div>
+  `;
+
+  // animate gauge
+  const total = 201;
+  const target = d.risk_percentage || 0;
+  const fill = document.getElementById("gFill");
+  const pctEl = document.getElementById("gPct");
+  let curr = 0;
+  const step = ()=>{
+    curr = Math.min(curr + target/55, target);
+    fill.style.strokeDashoffset = total - (curr/100)*total;
+    pctEl.textContent = Math.round(curr)+"%";
+    if(curr<target) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+
+  // animate disease bars
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(".bar-fill[data-w]").forEach(el=>{
+      el.style.width = el.dataset.w+"%";
+    });
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────
+loadAll();
+</script>
+</body>
+</html>

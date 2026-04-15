@@ -1,0 +1,10 @@
+
+pip install -r ml_service/requirements.txt
+
+python ml_service/train_model.py
+
+# 3. Start ML microservice (keep running alongside Node)
+python ml_service/predict_service.py
+
+# 4. Add one line to server.js (see SERVER_PATCH.js)
+# 5. Open → http://localhost:3000/cardio.html

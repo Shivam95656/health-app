@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — HeartGuard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep: #2d6a4f;
+      --green-mid:  #40916c;
+      --green-soft: #74c69d;
+      --green-pale: #b7e4c7;
+      --green-bg:   #d8f3dc;
+      --white:      #ffffff;
+      --off-white:  #f8faf9;
+      --text-dark:  #1a2e23;
+      --text-mid:   #3d5a47;
+      --text-light: #6b8c78;
+      --border:     #c8e6d4;
+    }
+
+    html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--off-white); }
+
+    .page { display: flex; height: 100vh; overflow: hidden; }
+
+    /* LEFT PANEL */
+    .panel-left {
+      width: 38%;
+      background: linear-gradient(160deg, var(--green-deep) 0%, var(--green-mid) 60%, var(--green-soft) 100%);
+      position: relative;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 48px 44px; overflow: hidden;
+    }
+    .panel-left::before {
+      content: ''; position: absolute;
+      width: 420px; height: 420px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      top: -100px; right: -140px;
+    }
+    .panel-left::after {
+      content: ''; position: absolute;
+      width: 280px; height: 280px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.10);
+      bottom: -60px; left: -80px;
+    }
+
+    .left-top { position: relative; z-index: 2; }
+
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 56px; }
+    .brand-icon-wrap {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.18); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-icon-wrap svg { width: 22px; height: 22px; fill: white; }
+    .brand-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; letter-spacing: 0.3px; }
+
+    .left-headline { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; line-height: 1.25; color: white; margin-bottom: 18px; }
+    .left-sub { font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.78); line-height: 1.7; max-width: 280px; }
+
+    .illustration-block { position: relative; z-index: 2; margin-top: 40px; }
+    .ecg-svg { width: 100%; margin-bottom: 32px; opacity: 0.92; }
+    .stats-row { display: flex; gap: 20px; }
+    .stat-card {
+      background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px); border-radius: 14px; padding: 18px 22px; flex: 1;
+    }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .stat-label { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.70); letter-spacing: 0.5px; text-transform: uppercase; }
+
+    .left-footer { position: relative; z-index: 2; font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.3px; }
+
+    .ecg-path {
+      stroke-dasharray: 600; stroke-dashoffset: 600;
+      animation: drawEcg 3s ease forwards 0.4s, pulseEcg 3s ease-in-out 3.4s infinite;
+    }
+    @keyframes drawEcg { to { stroke-dashoffset: 0; } }
+    @keyframes pulseEcg { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    /* RIGHT PANEL */
+    .panel-right {
+      width: 62%; background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      padding: 48px; position: relative;
+    }
+    .panel-right::before {
+      content: ''; position: absolute;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, var(--green-bg) 0%, transparent 70%);
+      top: -80px; right: -80px; pointer-events: none;
+    }
+
+    .form-wrapper {
+      width: 100%; max-width: 400px;
+      position: relative; z-index: 2;
+      animation: fadeUp 0.6s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-header { margin-bottom: 36px; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green-mid); margin-bottom: 10px; }
+    .form-header h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; line-height: 1.2; }
+    .form-header p { font-size: 15px; color: var(--text-light); font-weight: 300; line-height: 1.6; }
+
+    .form-group { margin-bottom: 22px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-bottom: 8px; letter-spacing: 0.2px; }
+
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-wrap svg {
+      position: absolute; left: 14px;
+      width: 16px; height: 16px;
+      stroke: var(--text-light); fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+      pointer-events: none; transition: stroke 0.2s; z-index: 1;
+    }
+    .input-wrap input {
+      width: 100%; padding: 13px 14px 13px 42px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 14.5px; color: var(--text-dark);
+      background: var(--off-white); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .input-wrap input::placeholder { color: #aec4b6; }
+    .input-wrap input:focus { border-color: var(--green-mid); background: var(--white); box-shadow: 0 0 0 4px rgba(64,145,108,0.10); }
+    .input-wrap:focus-within svg { stroke: var(--green-mid); }
+
+    .row-options { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .remember { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; color: var(--text-mid); }
+    .remember input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--green-mid); cursor: pointer; }
+    .forgot { font-size: 13.5px; color: var(--green-mid); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .forgot:hover { color: var(--green-deep); }
+
+    .btn-primary {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-deep) 100%);
+      color: white; border: none; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+      cursor: pointer; letter-spacing: 0.3px;
+      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+      box-shadow: 0 4px 18px rgba(45, 106, 79, 0.30);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(45,106,79,0.38); filter: brightness(1.05); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary.btn-loading { opacity: 0.75; cursor: not-allowed; transform: none; filter: none; }
+
+    .divider { display: flex; align-items: center; gap: 14px; margin: 24px 0; }
+    .divider span { font-size: 12px; color: #b0c9bb; white-space: nowrap; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .btn-sso {
+      width: 100%; padding: 13px; background: white; color: var(--text-mid);
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-sso:hover { border-color: var(--green-soft); background: var(--off-white); }
+    .btn-sso svg { width: 18px; height: 18px; }
+
+    /* Alert — exact class pattern your auth.js uses: "alert alert-error show" */
+    .alert { display: none; margin-top: 16px; padding: 12px 16px; border-radius: 8px; font-size: 13.5px; font-weight: 500; }
+    .alert.show         { display: block; }
+    .alert.alert-error  { background: #fff0f0; border: 1px solid #f5c6cb; color: #c0392b; }
+    .alert.alert-success{ background: #f0fff4; border: 1px solid var(--green-pale); color: var(--green-deep); }
+
+    .form-footer { margin-top: 28px; text-align: center; font-size: 14px; color: var(--text-light); }
+    .form-footer a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+    .form-footer a:hover { color: var(--green-deep); }
+
+    @media (max-width: 860px) {
+      .panel-left { display: none; }
+      .panel-right { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- LEFT PANEL -->
+  <div class="panel-left">
+    <div class="left-top">
+      <div class="brand">
+        <div class="brand-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <span class="brand-name">HeartGuard</span>
+      </div>
+      <div class="left-headline">Your Heart,<br>Protected.</div>
+      <p class="left-sub">Advanced cardiac monitoring and real-time health insights, right at your fingertips.</p>
+    </div>
+
+    <div class="illustration-block">
+      <svg class="ecg-svg" viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
+        <path class="ecg-path"
+          d="M0,40 L40,40 L55,40 L62,20 L70,60 L80,10 L90,70 L100,40 L115,40 L125,40 L130,30 L135,50 L140,40 L180,40 L192,40 L198,25 L205,55 L212,15 L220,65 L228,40 L260,40 L270,40 L276,32 L282,48 L290,40 L320,40"
+          fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round"
+        />
+      </svg>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num">98%</div><div class="stat-label">Accuracy</div></div>
+        <div class="stat-card"><div class="stat-num">24 / 7</div><div class="stat-label">Monitoring</div></div>
+      </div>
+    </div>
+
+    <div class="left-footer">&copy; 2025 HeartGuard. All rights reserved.</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+    <div class="form-wrapper">
+
+      <div class="form-header">
+        <div class="eyebrow">Secure Portal</div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to access your health dashboard and monitor your cardiac wellness.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+        </div>
+      </div>
+
+      <div class="row-options">
+        <label class="remember"><input type="checkbox" /> Keep me signed in</label>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+
+      <!-- id="loginBtn" matches your auth.js exactly -->
+      <button class="btn-primary" onclick="login()" id="loginBtn">Sign In</button>
+
+      <!-- id="alert" matches your auth.js exactly -->
+      <div id="alert" class="alert"></div>
+
+      <div class="divider"><span>or continue with</span></div>
+
+      <button class="btn-sso">
+        <svg viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Sign in with Google
+      </button>
+
+      <div class="form-footer">
+        Don't have an account? <a href="register.html">Create one</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Your original auth.js — zero changes ── */
+
+  function showAlert(message, type = "error") {
+    const el = document.getElementById("alert");
+    el.textContent = message;
+    el.className = `alert alert-${type} show`;
+  }
+
+  async function login() {
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const btn      = document.getElementById("loginBtn");
+
+    if (!email || !password) return showAlert("Please fill in all fields.");
+
+    btn.textContent = "Signing in...";
+    btn.classList.add("btn-loading");
+
+    const res  = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    btn.textContent = "Sign In";
+    btn.classList.remove("btn-loading");
+
+    if (data.user) {
+      localStorage.setItem("user_id", data.user.id);
+      window.location.href = "profile.html";
+    } else {
+      showAlert(data.error, "error");
+    }
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+</script>
+</body>
+</html>

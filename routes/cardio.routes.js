@@ -111,9 +111,13 @@ Return ONLY this JSON (no markdown):
 /* ── GET /cardio/patients ─────────────────────────────────────────────── */
 router.get("/patients", async (req, res) => {
   try {
+    const userId = req.query.user_id;
+    if (!userId) return res.status(401).json({ error: "user_id is required" });
+
     const { data: rows, error } = await supabase
       .from("final_data")
       .select("*")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(50);
 
@@ -152,10 +156,14 @@ router.get("/patients", async (req, res) => {
 /* ── GET /cardio/patient/:id ──────────────────────────────────────────── */
 router.get("/patient/:id", async (req, res) => {
   try {
+    const userId = req.query.user_id;
+    if (!userId) return res.status(401).json({ error: "user_id is required" });
+
     const { data: rows, error } = await supabase
       .from("final_data")
       .select("*")
       .eq("id", req.params.id)
+      .eq("user_id", userId)
       .limit(1);
 
     if (error || !rows.length)
@@ -175,9 +183,13 @@ router.get("/patient/:id", async (req, res) => {
 /* ── GET /cardio/latest ────────────────────────────────────────────────── */
 router.get("/latest", async (req, res) => {
   try {
+    const userId = req.query.user_id;
+    if (!userId) return res.status(401).json({ error: "user_id is required" });
+
     const { data: rows, error } = await supabase
       .from("final_data")
       .select("*")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(1);
 

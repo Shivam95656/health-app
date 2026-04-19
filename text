@@ -2,7 +2,7 @@
 pip install -r ml_service/requirements.txt
 
 python ml_service/train_model.py
-
+python train_ecg_model.py
 
 python ml_service/predict_service.py
 

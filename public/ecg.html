@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ECG Analysis — HeartGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:        #1d4ed8;
+      --blue-hover:  #1e40af;
+      --blue-light:  #eff6ff;
+      --blue-mid:    #bfdbfe;
+      --border:      #e2e8f0;
+      --bg:          #f0f4fb;
+      --white:       #ffffff;
+      --text:        #0f172a;
+      --text-sub:    #64748b;
+      --text-muted:  #94a3b8;
+      --slate-light: #f8fafc;
+      --success:     #059669;
+      --warning:     #d97706;
+      --danger:      #dc2626;
+      --teal:        #0d9488;
+      --teal-light:  #f0fdfa;
+      --purple:      #7c3aed;
+      --purple-light:#f5f3ff;
+      --radius:      14px;
+      --radius-sm:   9px;
+      --shadow:      0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
+
+    /* ── SIDEBAR ── */
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; flex-shrink: 0; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; }
+    .sidebar-logo { padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-mark { width: 36px; height: 36px; background: var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+    .logo-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text); }
+    .sidebar-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 0 0.75rem; margin: 1rem 0 0.5rem; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-sub); cursor: pointer; transition: all 0.15s; text-decoration: none; margin-bottom: 2px; }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .nav-item:hover { background: var(--slate-light); color: var(--text); }
+    .nav-item.active { background: var(--purple-light); color: var(--purple); font-weight: 600; }
+    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
+    .user-row { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 34px; height: 34px; background: var(--blue-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--blue); }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-email { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 11px; color: var(--text-muted); }
+    .sign-out-btn { background: none; border: none; cursor: pointer; padding: 4px; color: var(--text-muted); }
+    .sign-out-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .sign-out-btn:hover { color: var(--danger); }
+
+    /* ── MAIN ── */
+    .main { margin-left: 240px; flex: 1; padding: 2rem 2.5rem; max-width: calc(100vw - 240px); }
+
+    /* ── PAGE HEADER ── */
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; }
+    .page-title { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--text); letter-spacing: -0.5px; margin-bottom: 4px; }
+    .page-sub { font-size: 14px; color: var(--text-sub); }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+    .btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: var(--blue-hover); }
+    .btn-purple { background: var(--purple); color: white; }
+    .btn-purple:hover { background: #6d28d9; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── ALERT ── */
+    .alert-inline { font-size: 13px; color: var(--danger); background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-sm); padding: 10px 14px; display: none; margin-bottom: 1.25rem; }
+    .alert-inline.show { display: block; }
+
+    /* ── ECG CARD ── */
+    .ecg-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; }
+    .ecg-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); }
+    .ecg-header-left { }
+    .ecg-title { font-size: 14px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
+    .ecg-title svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+    .ecg-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+    .ecg-meta { display: flex; align-items: center; gap: 1rem; }
+    .ecg-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+    .ecg-badge.normal   { background: rgba(5,150,105,0.2);  color: #6ee7b7; }
+    .ecg-badge.mild     { background: rgba(217,119,6,0.25); color: #fcd34d; }
+    .ecg-badge.severe   { background: rgba(220,38,38,0.25); color: #fca5a5; }
+    .ecg-badge.unknown  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+    .ecg-body { padding: 0; background: #0f0f23; }
+    .ecg-chart-wrap { position: relative; padding: 1rem 1.25rem 0.75rem; }
+    .ecg-canvas-container { position: relative; height: 200px; }
+    .ecg-grid-info { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    .ecg-info-pill { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px; }
+    .ecg-info-pill span { color: rgba(255,255,255,0.8); font-weight: 600; }
+    /* Scrollbar for ECG window controls */
+    .ecg-controls { display: flex; align-items: center; gap: 0.5rem; }
+    .ecg-window-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 600; padding: 4px 10px; cursor: pointer; transition: all 0.15s; }
+    .ecg-window-btn:hover, .ecg-window-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+
+    /* ── STAT CARDS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; box-shadow: var(--shadow); }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); line-height: 1; margin-bottom: 4px; }
+    .stat-desc { font-size: 12px; color: var(--text-sub); }
+    .stat-card.risk-high .stat-value { color: var(--danger); }
+    .stat-card.risk-mid  .stat-value { color: var(--warning); }
+    .stat-card.risk-low  .stat-value { color: var(--success); }
+
+    /* ── CARDS ── */
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card-header { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .card-body { padding: 1.5rem; }
+
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+
+    /* ── PLACEHOLDER ── */
+    .placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px; text-align: center; }
+    .placeholder svg { width: 36px; height: 36px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; opacity: 0.4; }
+
+    /* ── GAUGE ── */
+    .gauge-wrap { position: relative; width: 180px; height: 100px; margin: 0 auto 0.75rem; }
+    .gauge-svg { width: 180px; height: 100px; }
+    .gauge-percent { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 700; color: var(--text); }
+    .gauge-label { font-size: 13px; color: var(--text-sub); text-align: center; font-weight: 500; }
+
+    /* ── RISK BADGE ── */
+    .risk-badge { font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .risk-badge.high   { background: #fef2f2; color: var(--danger); }
+    .risk-badge.medium { background: #fffbeb; color: var(--warning); }
+    .risk-badge.low    { background: #f0fdf4; color: var(--success); }
+
+    /* ── FACTOR BARS ── */
+    .factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .factor-row:last-child { margin-bottom: 0; }
+    .factor-label { font-size: 12px; font-weight: 500; color: var(--text-sub); width: 110px; flex-shrink: 0; }
+    .factor-bar-wrap { flex: 1; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .factor-bar { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .factor-val { font-size: 11px; font-weight: 600; color: var(--text-sub); width: 38px; text-align: right; flex-shrink: 0; }
+
+    /* ── DISEASE CARDS ── */
+    .disease-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .disease-card { background: var(--slate-light); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.85rem 1rem; }
+    .disease-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .disease-bar-wrap { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
+    .disease-bar { height: 100%; border-radius: 3px; transition: width 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .disease-pct { font-size: 13px; font-weight: 700; }
+
+    /* ── GEMINI PANEL ── */
+    .gemini-summary { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 1.25rem; }
+    .gemini-block { margin-bottom: 1.25rem; }
+    .gemini-block-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted); margin-bottom: 0.6rem; }
+    .gemini-list { list-style: none; }
+    .gemini-list li { font-size: 13px; color: var(--text-sub); line-height: 1.6; padding: 4px 0 4px 20px; position: relative; }
+    .gemini-list li::before { content: "→"; position: absolute; left: 0; color: var(--purple); font-weight: 600; }
+    .gemini-concern { background: #fef9c3; border: 1px solid #fde047; border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 13px; font-weight: 500; color: #713f12; margin-bottom: 1.25rem; }
+    .gemini-ecg-interp { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 13px; color: #4c1d95; margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 8px; }
+    .gemini-ecg-interp svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .urgency-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .urgency-Routine   { background: #f0fdf4; color: #166534; }
+    .urgency-Soon      { background: #fffbeb; color: #92400e; }
+    .urgency-Urgent    { background: #fff7ed; color: #9a3412; }
+    .urgency-Emergency { background: #fef2f2; color: #7f1d1d; }
+    .disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+
+    /* ── HISTORY TABLE ── */
+    .history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .history-table th { padding: 0.65rem 1.25rem; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: var(--slate-light); border-bottom: 1px solid var(--border); }
+    .history-table td { padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); color: var(--text-sub); }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: var(--slate-light); }
+    .load-row-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600; color: var(--purple); cursor: pointer; transition: all 0.12s; }
+    .load-row-btn:hover { background: var(--purple-light); border-color: var(--purple); }
+
+    /* ── ANIMATE ── */
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate { animation: rise 0.3s ease both; }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.1s; }
+    .d3 { animation-delay: 0.15s; }
+    .d4 { animation-delay: 0.2s; }
+
+
+    /* ── INSERT BUTTON ── */
+    .btn-insert { background: #0d9488; color: white; }
+    .btn-insert:hover { background: #0f766e; }
+
+    /* ── MODAL OVERLAY ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.55);
+      backdrop-filter: blur(4px); z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--white); border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+      width: 520px; max-width: calc(100vw - 2rem);
+      max-height: 90vh; overflow-y: auto;
+      transform: translateY(16px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-header {
+      padding: 1.35rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .modal-title svg { width:18px; height:18px; fill:none; stroke:#0d9488; stroke-width:2; stroke-linecap:round; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 6px; transition: all 0.12s; }
+    .modal-close:hover { background: var(--slate-light); color: var(--text); }
+    .modal-close svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+
+    .modal-body { padding: 1.25rem 1.5rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .form-input, .form-select, .form-textarea {
+      padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px;
+      font-size: 13px; font-family: inherit; color: var(--text);
+      background: var(--slate-light); transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: #0d9488; box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+    }
+    .form-textarea { resize: vertical; min-height: 80px; font-family: 'Courier New', monospace; font-size: 12px; }
+    .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .generate-strip {
+      background: linear-gradient(135deg, #f0fdfa, #ecfdf5);
+      border: 1px solid #a7f3d0; border-radius: 10px;
+      padding: 0.85rem 1rem; margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .generate-strip-text { font-size: 12px; color: #065f46; font-weight: 500; }
+    .btn-generate { background: #059669; color: white; font-size: 11px; font-weight: 700;
+      padding: 6px 14px; border-radius: 7px; border: none; cursor: pointer; transition: background 0.12s; white-space: nowrap; }
+    .btn-generate:hover { background: #047857; }
+
+    .modal-footer {
+      padding: 1rem 1.5rem 1.35rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .modal-status { font-size: 12px; color: var(--text-muted); min-height: 18px; }
+    .modal-status.ok  { color: var(--success); font-weight: 600; }
+    .modal-status.err { color: var(--danger);  font-weight: 600; }
+    .btn-submit { background: #0d9488; color: white; font-size: 13px; font-weight: 700;
+      padding: 10px 24px; border-radius: 9px; border: none; cursor: pointer; transition: background 0.12s; display: flex; align-items: center; gap: 7px; }
+    .btn-submit:hover { background: #0f766e; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    /* ── LOADING SPINNER ── */
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <span class="logo-name">HeartGuard</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main</div>
+      <a href="index.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+      <a href="predict.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Analysis
+      </a>
+      <a href="ecg.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
+        ECG Analysis
+      </a>
+       <a href="cardio.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
+        Predict 
+      </a>
+
+      <a href="profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        IoT Data
+      </a>
+      <div class="nav-label">Settings</div>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Settings
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar" id="sideAvatar">U</div>
+        <div class="user-info">
+          <div class="user-email" id="sideEmail">user@email.com</div>
+          <div class="user-role">Patient</div>
+        </div>
+        <button class="sign-out-btn" onclick="signOut()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- Page Header -->
+    <div class="page-header animate">
+      <div>
+        <h1 class="page-title">ECG Analysis</h1>
+        <p class="page-sub">Raw ECG waveform from Supabase — visualised and analysed for heart disease risk.</p>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="loadLatestECG()" id="loadBtn">
+          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+          Load Latest ECG
+        </button>
+        <button class="btn btn-insert" onclick="openInsertModal()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Insert ECG
+        </button>
+        <button class="btn btn-purple" onclick="runPrediction()" id="predictBtn" disabled>
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Predict Risk
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div id="alertBox" class="alert-inline"></div>
+
+    <!-- ECG Waveform Card -->
+    <div class="ecg-card animate d1">
+      <div class="ecg-header">
+        <div class="ecg-header-left">
+          <div class="ecg-title">
+            <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
+            ECG Waveform
+          </div>
+          <div class="ecg-sub" id="ecgSubText">Load a record to view the raw waveform</div>
+        </div>
+        <div class="ecg-meta">
+          <div id="ecgLabelBadge" class="ecg-badge unknown">—</div>
+          <div class="ecg-controls">
+            <button class="ecg-window-btn active" onclick="setWindow(this,1)" data-sec="1">1s</button>
+            <button class="ecg-window-btn"        onclick="setWindow(this,5)" data-sec="5">5s</button>
+            <button class="ecg-window-btn"        onclick="setWindow(this,0)" data-sec="0">All</button>
+          </div>
+        </div>
+      </div>
+      <div class="ecg-body">
+        <div class="ecg-chart-wrap">
+          <div class="ecg-canvas-container">
+            <canvas id="ecgCanvas"></canvas>
+          </div>
+        </div>
+        <div class="ecg-grid-info">
+          <div class="ecg-info-pill">Heart Rate <span id="infoHR">—</span> bpm</div>
+          <div class="ecg-info-pill">Sample Rate <span id="infoSR">—</span> Hz</div>
+          <div class="ecg-info-pill">Duration <span id="infoDur">—</span> sec</div>
+          <div class="ecg-info-pill">Total Samples <span id="infoSamples">—</span></div>
+          <div class="ecg-info-pill">Recorded <span id="infoDate">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholder before prediction -->
+    <div id="initialPlaceholder" class="card animate d2">
+      <div class="card-body">
+        <div class="placeholder" style="padding:3rem 1rem;">
+          <svg viewBox="0 0 24 24" style="width:48px;height:48px;margin-bottom:12px;"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
+          <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;">Load an ECG to begin</div>
+          <div style="max-width:380px;margin:0 auto 1.5rem;line-height:1.7;color:var(--text-sub);">
+            Click <strong>Load Latest ECG</strong> to fetch your raw ECG waveform from Supabase.
+            The graph will render the raw samples, then click <strong>Predict Risk</strong> to run the heart disease ML model.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ RESULTS ═══════ -->
+    <div id="resultsSection" style="display:none;">
+
+      <!-- Stat Cards -->
+      <div class="stats-row animate d1">
+        <div class="stat-card" id="statRiskCard">
+          <div class="stat-label">Overall Risk Score</div>
+          <div class="stat-value" id="statRiskVal">—</div>
+          <div class="stat-desc"  id="statRiskDesc">Heart disease probability</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">ECG Heart Rate</div>
+          <div class="stat-value" id="statHR">—</div>
+          <div class="stat-desc">bpm from waveform</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Arrhythmia Label</div>
+          <div class="stat-value" style="font-size:18px;padding-top:4px;" id="statLabel">—</div>
+          <div class="stat-desc">CNN classification</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Urgency</div>
+          <div class="stat-value" style="font-size:18px;padding-top:4px;" id="statUrgency">—</div>
+          <div class="stat-desc">AI-assessed priority</div>
+        </div>
+      </div>
+
+      <!-- Gauge + Factor Bars -->
+      <div class="grid-2 animate d2">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Overall Disease Risk</div><div class="card-sub">Composite ML score from ECG + profile data</div></div>
+            <div id="riskBadge"></div>
+          </div>
+          <div class="card-body" style="text-align:center;">
+            <div class="gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 180 100">
+                <path d="M20 90 A70 70 0 0 1 160 90" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugePath" d="M20 90 A70 70 0 0 1 160 90" fill="none" stroke="#dc2626" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1);"/>
+              </svg>
+              <div class="gauge-percent" id="gaugeText">—</div>
+            </div>
+            <div class="gauge-label" id="gaugeLabel">Run prediction to see risk score</div>
+            <div style="margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;text-align:center;">
+              <div><div style="width:10px;height:10px;border-radius:50%;background:#059669;margin:0 auto 3px;"></div><span style="color:var(--text-sub);">Low &lt;35%</span></div>
+              <div><div style="width:10px;height:10px;border-radius:50%;background:#d97706;margin:0 auto 3px;"></div><span style="color:var(--text-sub);">Medium 35–65%</span></div>
+              <div><div style="width:10px;height:10px;border-radius:50%;background:#dc2626;margin:0 auto 3px;"></div><span style="color:var(--text-sub);">High &gt;65%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Risk Factor Contributions</div><div class="card-sub">How each parameter influences the result</div></div>
+          </div>
+          <div class="card-body" id="factorBars">
+            <div class="placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="17" y="5" width="4" height="16" rx="1"/></svg><div>Run a prediction to see factor breakdown</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disease Breakdown -->
+      <div class="card animate d2" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div><div class="card-title">Disease-Specific Risk Breakdown</div><div class="card-sub">Individual probability for 5 cardiovascular conditions</div></div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:240px 1fr;gap:2rem;align-items:center;">
+            <div><canvas id="donutChart" height="240"></canvas></div>
+            <div id="diseaseCards" class="disease-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="card animate d3" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">AI Health Insights</div>
+            <div class="card-sub">Powered by Google Gemini — interpreted from ECG waveform + profile</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
+            <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Not a medical diagnosis
+          </div>
+        </div>
+        <div class="card-body" id="geminiPanel">
+          <div class="placeholder"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6a6 6 0 0 1 6 6"/><circle cx="12" cy="12" r="2"/></svg><div>AI insights will appear after prediction</div></div>
+        </div>
+      </div>
+
+      <!-- ECG History -->
+      <div class="card animate d4">
+        <div class="card-header">
+          <div><div class="card-title">ECG Record History</div><div class="card-sub">Last 10 ECG recordings — click to load waveform</div></div>
+          <button class="btn btn-sm btn-primary" onclick="loadHistory()">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+            Refresh
+          </button>
+        </div>
+        <div id="historyPanel">
+          <div class="placeholder" style="padding:2rem;">Loading ECG history...</div>
+        </div>
+      </div>
+
+    </div><!-- /resultsSection -->
+
+  </main>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════ */
+const user_id = localStorage.getItem("user_id");
+if (!user_id) window.location.href = "login.html";
+
+const email = localStorage.getItem("user_email") || "user@email.com";
+document.getElementById("sideEmail").textContent = email;
+document.getElementById("sideAvatar").textContent = email[0].toUpperCase();
+
+function signOut() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let ecgRecord   = null;   // current ECG record from Supabase
+let ecgChart    = null;   // Chart.js instance
+let donutInst   = null;
+let windowSec   = 1;      // current waveform window in seconds (0 = all)
+
+/* ═══════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════ */
+function showAlert(msg) {
+  const el = document.getElementById("alertBox");
+  el.textContent = msg;
+  el.classList.add("show");
+}
+function clearAlert() {
+  const el = document.getElementById("alertBox");
+  el.textContent = "";
+  el.classList.remove("show");
+}
+
+function riskColor(pct) {
+  if (pct >= 65) return "#dc2626";
+  if (pct >= 35) return "#d97706";
+  return "#059669";
+}
+function riskClass(pct) {
+  if (pct >= 65) return "high";
+  if (pct >= 35) return "medium";
+  return "low";
+}
+function riskLabel(pct) {
+  if (pct >= 65) return "High Risk";
+  if (pct >= 35) return "Moderate Risk";
+  return "Low Risk";
+}
+
+function labelBadgeClass(label = "") {
+  const l = label.toLowerCase();
+  if (!l || l === "normal" || l === "n") return "normal";
+  if (l.includes("afib") || l.includes("st") || l.includes("svt") || l.includes("pvc")) return "mild";
+  return "severe";
+}
+
+function fmtDate(ts) {
+  if (!ts) return "—";
+  const d = new Date(ts);
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) +
+         " " + d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+}
+
+/* ═══════════════════════════════════════════════
+   ECG WAVEFORM CHART
+═══════════════════════════════════════════════ */
+function renderECGChart(samples, sampleRate, windowSeconds) {
+  const sr = sampleRate || 360;
+
+  // Determine slice
+  let slice = samples;
+  if (windowSeconds > 0) {
+    const pts = Math.min(windowSeconds * sr, samples.length);
+    slice = samples.slice(0, pts);
+  }
+
+  // Downsample for performance: max 2000 points on screen
+  const MAX_PTS = 2000;
+  let displayData = slice;
+  if (slice.length > MAX_PTS) {
+    const step = Math.ceil(slice.length / MAX_PTS);
+    displayData = slice.filter((_, i) => i % step === 0);
+  }
+
+  const labels = displayData.map((_, i) => (i / (displayData.length / (slice.length / sr))).toFixed(3));
+
+  if (ecgChart) {
+    ecgChart.data.labels = labels;
+    ecgChart.data.datasets[0].data = displayData;
+    ecgChart.update("none");
+    return;
+  }
+
+  const ctx = document.getElementById("ecgCanvas").getContext("2d");
+  ecgChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        data:           displayData,
+        borderColor:    "#a78bfa",
+        borderWidth:    1.5,
+        pointRadius:    0,
+        tension:        0.2,
+        fill:           false,
+      }]
+    },
+    options: {
+      animation:   false,
+      responsive:  true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: "index",
+          intersect: false,
+          callbacks: {
+            title: items => `t = ${items[0].label}s`,
+            label: item  => `${item.raw.toFixed(4)} mV`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid:   { color: "rgba(255,255,255,0.05)" },
+          ticks:  { color: "rgba(255,255,255,0.35)", font: { size: 10 }, maxTicksLimit: 10 },
+          title:  { display: true, text: "Time (s)", color: "rgba(255,255,255,0.3)", font: { size: 10 } }
+        },
+        y: {
+          grid:   { color: "rgba(255,255,255,0.05)" },
+          ticks:  { color: "rgba(255,255,255,0.35)", font: { size: 10 } },
+          title:  { display: true, text: "Amplitude (mV)", color: "rgba(255,255,255,0.3)", font: { size: 10 } }
+        }
+      }
+    }
+  });
+}
+
+function setWindow(btn, sec) {
+  document.querySelectorAll(".ecg-window-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  windowSec = sec;
+  if (ecgRecord?.samples?.length) {
+    renderECGChart(ecgRecord.samples, ecgRecord.sample_rate, windowSec);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   LOAD LATEST ECG
+═══════════════════════════════════════════════ */
+async function loadLatestECG() {
+  clearAlert();
+  const btn = document.getElementById("loadBtn");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Loading...`;
+
+  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
+
+  try {
+    // Call Supabase REST API directly — works without server restart
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/ecg_data?user_id=eq.${user_id}&order=created_at.desc&limit=1`,
+      {
+        headers: {
+          "apikey":        SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+        },
+      }
+    );
+
+    const rows = await res.json();
+
+    if (!rows || !rows.length) {
+      document.getElementById("ecgSubText").textContent = "No ECG records found — upload a reading to get started.";
+      loadHistory();
+      return;
+    }
+
+    const data = rows[0];
+    populateECGCard(data);
+    document.getElementById("predictBtn").disabled = false;
+    loadHistory();
+
+  } catch (err) {
+    showAlert("Could not load ECG: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Load Latest ECG`;
+  }
+}
+
+function populateECGCard(record) {
+  ecgRecord = record;
+
+  // Header meta
+  const labelText = record.label || "Unknown";
+  const badge = document.getElementById("ecgLabelBadge");
+  badge.textContent = labelText;
+  badge.className   = `ecg-badge ${labelBadgeClass(labelText)}`;
+
+  document.getElementById("ecgSubText").textContent =
+    `Record from ${fmtDate(record.created_at)} — ${(record.samples || []).length} samples @ ${record.sample_rate || 360} Hz`;
+
+  // Info strip
+  document.getElementById("infoHR").textContent      = record.heart_rate ?? "—";
+  document.getElementById("infoSR").textContent      = record.sample_rate ?? "—";
+  document.getElementById("infoDur").textContent     = record.duration_sec ?? "—";
+  document.getElementById("infoSamples").textContent = (record.samples || []).length;
+  document.getElementById("infoDate").textContent    = fmtDate(record.created_at);
+
+  // Render waveform
+  const samples = record.samples || [];
+  if (samples.length) {
+    renderECGChart(samples, record.sample_rate, windowSec);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   LOAD SPECIFIC ECG RECORD BY ID
+═══════════════════════════════════════════════ */
+async function loadRecordById(id) {
+  clearAlert();
+  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
+  try {
+    const res  = await fetch(
+      `${SUPABASE_URL}/rest/v1/ecg_data?id=eq.${id}&limit=1`,
+      {
+        headers: {
+          "apikey":        SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+        },
+      }
+    );
+    const rows = await res.json();
+    if (!rows?.length) throw new Error("Record not found");
+    const data = rows[0];
+    populateECGCard(data);
+    document.getElementById("predictBtn").disabled = false;
+    if (ecgChart) { ecgChart.destroy(); ecgChart = null; }
+    if (data.samples?.length) renderECGChart(data.samples, data.sample_rate, windowSec);
+  } catch (err) {
+    showAlert("Could not load record: " + err.message);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════════ */
+async function loadHistory() {
+  const panel = document.getElementById("historyPanel");
+  panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>Loading...</div></div>`;
+
+  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
+
+  try {
+    const res  = await fetch(
+      `${SUPABASE_URL}/rest/v1/ecg_data?user_id=eq.${user_id}&order=created_at.desc&limit=10&select=id,created_at,heart_rate,label,duration_sec,sample_rate`,
+      {
+        headers: {
+          "apikey":        SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+        },
+      }
+    );
+    const rows = await res.json();
+
+    if (!rows.length) {
+      panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>No ECG records found.</div></div>`;
+      return;
+    }
+
+    panel.innerHTML = `
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Recorded</th>
+            <th>Heart Rate</th>
+            <th>Label</th>
+            <th>Duration</th>
+            <th>Sample Rate</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${fmtDate(r.created_at)}</td>
+              <td>${r.heart_rate ?? "—"} bpm</td>
+              <td><span style="font-weight:600;color:${labelBadgeClass(r.label)==='normal'?'var(--success)':labelBadgeClass(r.label)==='mild'?'var(--warning)':'var(--danger)'}">${r.label || "—"}</span></td>
+              <td>${r.duration_sec ?? "—"}s</td>
+              <td>${r.sample_rate ?? "—"} Hz</td>
+              <td><button class="load-row-btn" onclick="loadRecordById('${r.id}')">Load</button></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>`;
+
+  } catch (err) {
+    panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>Error: ${err.message}</div></div>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   RUN PREDICTION
+═══════════════════════════════════════════════ */
+async function runPrediction() {
+  if (!ecgRecord) { showAlert("Load an ECG record first."); return; }
+  clearAlert();
+
+  const btn = document.getElementById("predictBtn");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Analysing...`;
+
+  document.getElementById("initialPlaceholder").style.display = "none";
+
+  try {
+    const res  = await fetch(`/ecg/predict/${user_id}`, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ record_id: ecgRecord.id }),
+    });
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    // Soft warning when no profile exists — prediction still runs with clinical defaults
+    if (data.profile_missing) {
+      showAlert('⚠️ No profile found — prediction used clinical defaults. Fill in your profile for personalised results.', 'warning');
+    }
+
+    renderResults(data);
+
+  } catch (err) {
+    showAlert("Prediction failed: " + err.message);
+    document.getElementById("initialPlaceholder").style.display = "";
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Predict Risk`;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER RESULTS
+═══════════════════════════════════════════════ */
+function renderResults(data) {
+  const pct     = data.risk_percentage ?? 0;
+  const level   = riskClass(pct);
+  const gemini  = data.gemini || {};
+  const diseases= data.disease_breakdown || [];
+  const factors = data.top_features || data.risk_factors || data.feature_importances || [];
+
+  document.getElementById("resultsSection").style.display = "";
+  document.getElementById("initialPlaceholder").style.display = "none";
+
+  /* Stat Cards */
+  const riskCard = document.getElementById("statRiskCard");
+  riskCard.className = `stat-card risk-${level}`;
+  document.getElementById("statRiskVal").textContent  = `${pct}%`;
+  document.getElementById("statRiskDesc").textContent = riskLabel(pct);
+  document.getElementById("statHR").textContent       = ecgRecord?.heart_rate ?? "—";
+  document.getElementById("statLabel").textContent    = ecgRecord?.label || "—";
+  const urgEl = document.getElementById("statUrgency");
+  urgEl.textContent = gemini.urgency || "—";
+  urgEl.style.color = { Routine:"var(--success)", Soon:"var(--warning)", Urgent:"#ea580c", Emergency:"var(--danger)" }[gemini.urgency] || "var(--text)";
+
+  /* Gauge */
+  const offset = 220 - (pct / 100) * 220;
+  document.getElementById("gaugePath").style.strokeDashoffset = offset;
+  document.getElementById("gaugePath").style.stroke           = riskColor(pct);
+  document.getElementById("gaugeText").textContent            = `${pct}%`;
+  document.getElementById("gaugeLabel").textContent           = riskLabel(pct);
+  document.getElementById("riskBadge").innerHTML              =
+    `<span class="risk-badge ${level}">${riskLabel(pct)}</span>`;
+
+  /* Factor Bars */
+  const fbEl = document.getElementById("factorBars");
+  if (factors.length) {
+    const maxVal = Math.max(...factors.map(f => f.importance ?? f.value ?? f.val ?? 0));
+    fbEl.innerHTML = factors.map(f => {
+      const val = f.importance ?? f.value ?? f.val ?? 0;
+      const pct2 = maxVal > 0 ? Math.round((val / maxVal) * 100) : 0;
+      return `
+        <div class="factor-row">
+          <div class="factor-label">${f.label || f.name}</div>
+          <div class="factor-bar-wrap"><div class="factor-bar" style="width:${pct2}%;background:${f.color||riskColor(pct2)};"></div></div>
+          <div class="factor-val">${typeof val === "number" ? val.toFixed(1) : val}</div>
+        </div>`;
+    }).join("");
+  } else {
+    fbEl.innerHTML = `<div class="placeholder" style="padding:2rem;"><div>No factor data returned.</div></div>`;
+  }
+
+  /* Disease Donut */
+  if (donutInst) { donutInst.destroy(); donutInst = null; }
+  if (diseases.length) {
+    const COLORS = ["#7c3aed","#2563eb","#0d9488","#d97706","#dc2626"];
+    const ctx = document.getElementById("donutChart").getContext("2d");
+    donutInst = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels:   diseases.map(d => d.name),
+        datasets: [{ data: diseases.map(d => d.pct), backgroundColor: COLORS, borderWidth: 2, borderColor: "#fff" }]
+      },
+      options: {
+        cutout: "65%",
+        plugins: { legend: { position: "bottom", labels: { font: { size: 11 }, padding: 8 } }, tooltip: { callbacks: { label: i => ` ${i.raw}%` } } },
+        animation: { duration: 800 }
+      }
+    });
+
+    document.getElementById("diseaseCards").innerHTML = diseases.map((d, i) => `
+      <div class="disease-card">
+        <div class="disease-name">${d.name}</div>
+        <div class="disease-bar-wrap"><div class="disease-bar" style="width:${d.pct}%;background:${COLORS[i]};"></div></div>
+        <div class="disease-pct" style="color:${COLORS[i]}">${d.pct}%</div>
+      </div>`).join("");
+  }
+
+  /* Gemini Panel */
+  const gp = document.getElementById("geminiPanel");
+  gp.innerHTML = `
+    ${gemini.ecgInterpretation ? `
+      <div class="gemini-ecg-interp">
+        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
+        <div><strong>ECG Interpretation:</strong> ${gemini.ecgInterpretation}</div>
+      </div>` : ""}
+    ${gemini.summary ? `<p class="gemini-summary">${gemini.summary}</p>` : ""}
+    ${gemini.primaryConcern ? `<div class="gemini-concern">⚠️ Primary Concern: ${gemini.primaryConcern}</div>` : ""}
+    ${gemini.recommendations?.length ? `
+      <div class="gemini-block">
+        <div class="gemini-block-title">Recommendations</div>
+        <ul class="gemini-list">${gemini.recommendations.map(r => `<li>${r}</li>`).join("")}</ul>
+      </div>` : ""}
+    ${gemini.lifestyle?.length ? `
+      <div class="gemini-block">
+        <div class="gemini-block-title">Lifestyle Changes</div>
+        <ul class="gemini-list">${gemini.lifestyle.map(l => `<li>${l}</li>`).join("")}</ul>
+      </div>` : ""}
+    ${gemini.urgency ? `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
+        <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Urgency</span>
+        <span class="urgency-badge urgency-${gemini.urgency}">${gemini.urgency}</span>
+      </div>` : ""}
+    ${gemini.disclaimer ? `<div class="disclaimer">${gemini.disclaimer}</div>` : ""}
+  `;
+
+  // Scroll to results
+  document.getElementById("resultsSection").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+window.addEventListener("DOMContentLoaded", () => {
+  loadLatestECG();
+});
+</script>
+
+<!-- ══ INSERT ECG MODAL ══ -->
+<div class="modal-overlay" id="insertModal" onclick="closeOnBackdrop(event)">
+  <div class="modal">
+
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
+        Insert ECG Record
+      </div>
+      <button class="modal-close" onclick="closeInsertModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Quick-fill strip -->
+      <div class="generate-strip">
+        <div class="generate-strip-text">⚡ Auto-fill with realistic synthetic ECG waveform</div>
+        <button class="btn-generate" onclick="fillSyntheticECG()">Generate Sample</button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Heart Rate (bpm)</label>
+          <input class="form-input" id="ins_hr" type="number" placeholder="72" min="30" max="220" value="72"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sample Rate (Hz)</label>
+          <input class="form-input" id="ins_sr" type="number" placeholder="360" value="360"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Arrhythmia Label</label>
+          <select class="form-select" id="ins_label">
+            <option value="Normal">Normal</option>
+            <option value="AFIB">AFIB</option>
+            <option value="ST-elevation">ST-elevation</option>
+            <option value="ST-depression">ST-depression</option>
+            <option value="T-wave inversion">T-wave inversion</option>
+            <option value="PVC">PVC</option>
+            <option value="SVT">SVT</option>
+            <option value="LVH">LVH</option>
+            <option value="LBBB">LBBB</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration (sec)</label>
+          <input class="form-input" id="ins_dur" type="number" placeholder="10" step="0.1" value="10"/>
+        </div>
+      </div>
+
+      <div class="form-group full" style="margin-bottom:0.25rem;">
+        <label class="form-label">Samples (JSON float array)</label>
+        <textarea class="form-textarea" id="ins_samples" placeholder="[0.12, 0.34, -0.05, ...]" rows="4"></textarea>
+        <div class="form-hint">Paste raw ADC/mV values as a JSON array, or click Generate Sample above.</div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-status" id="insertStatus"></div>
+      <button class="btn-submit" id="insertSubmitBtn" onclick="submitInsert()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Insert Record
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ══ INSERT MODAL ══ */
+function openInsertModal()  { document.getElementById("insertModal").classList.add("open"); }
+function closeInsertModal() { document.getElementById("insertModal").classList.remove("open"); }
+function closeOnBackdrop(e) { if (e.target === document.getElementById("insertModal")) closeInsertModal(); }
+
+function fillSyntheticECG() {
+  const sr  = parseInt(document.getElementById("ins_sr").value)  || 360;
+  const dur = parseFloat(document.getElementById("ins_dur").value) || 10;
+  const hr  = parseInt(document.getElementById("ins_hr").value)   || 72;
+  const n   = Math.round(sr * dur);
+
+  // Synthesise a plausible ECG: baseline + P + QRS complex + T wave per beat
+  const bpm    = hr;
+  const period = sr * 60 / bpm;   // samples per beat
+  const samples = [];
+
+  for (let i = 0; i < n; i++) {
+    const phase = (i % period) / period;   // 0..1 within one beat
+    let v = 0;
+    // P wave (0.05–0.15)
+    if (phase >= 0.05 && phase < 0.15)
+      v += 0.15 * Math.sin(Math.PI * (phase - 0.05) / 0.10);
+    // QRS complex (0.20–0.30)
+    if (phase >= 0.20 && phase < 0.23) v -= 0.10;                          // Q
+    if (phase >= 0.23 && phase < 0.27)
+      v += 1.20 * Math.sin(Math.PI * (phase - 0.23) / 0.04);               // R
+    if (phase >= 0.27 && phase < 0.30) v -= 0.15;                          // S
+    // T wave (0.35–0.55)
+    if (phase >= 0.35 && phase < 0.55)
+      v += 0.35 * Math.sin(Math.PI * (phase - 0.35) / 0.20);
+    // noise
+    v += (Math.random() - 0.5) * 0.025;
+    samples.push(parseFloat(v.toFixed(4)));
+  }
+
+  document.getElementById("ins_samples").value = JSON.stringify(samples);
+  document.getElementById("ins_dur").value = dur;
+}
+
+async function submitInsert() {
+  const status  = document.getElementById("insertStatus");
+  const btn     = document.getElementById("insertSubmitBtn");
+  const sampRaw = document.getElementById("ins_samples").value.trim();
+
+  function setStatus(type, msg) {
+    status.textContent = msg;
+    status.className   = "modal-status" + (type === "ok" ? " ok" : type === "error" ? " err" : "");
+  }
+
+  if (!sampRaw) { setStatus("error", "Samples are required."); return; }
+
+  let parsedSamples;
+  try { parsedSamples = JSON.parse(sampRaw); }
+  catch { setStatus("error", "Invalid JSON in samples field."); return; }
+
+  btn.disabled = true;
+  setStatus("", "Inserting…");
+
+  // ── Direct Supabase REST insert (bypasses Express so no server restart needed) ──
+  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
+
+  try {
+    const sr  = parseInt(document.getElementById("ins_sr").value)    || 360;
+    const dur = parseFloat(document.getElementById("ins_dur").value) || parsedSamples.length / sr;
+    const hr  = parseFloat(document.getElementById("ins_hr").value)  || null;
+
+    // Get the session token from localStorage (Supabase stores it here after login)
+    const sbKey = Object.keys(localStorage).find(k => k.startsWith("sb-") && k.endsWith("-auth-token"));
+    const session = sbKey ? JSON.parse(localStorage.getItem(sbKey)) : null;
+    const accessToken = session?.access_token || SUPABASE_KEY;
+
+    const payload = {
+      user_id:     user_id,
+      samples:     parsedSamples,
+      sample_rate: sr,
+      heart_rate:  hr,
+      label:       document.getElementById("ins_label").value,
+      duration_sec: dur,
+    };
+
+    console.log("[ECG Insert] user_id:", user_id);
+    console.log("[ECG Insert] accessToken type:", accessToken === SUPABASE_KEY ? "anon key" : "user JWT");
+    console.log("[ECG Insert] payload:", payload);
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/ecg_data`, {
+      method: "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "apikey":        SUPABASE_KEY,
+        "Authorization": `Bearer ${accessToken}`,
+        "Prefer":        "return=representation",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const rawText = await res.text();
+    console.log("[ECG Insert] HTTP status:", res.status);
+    console.log("[ECG Insert] Response body:", rawText);
+
+    let data;
+    try { data = JSON.parse(rawText); } catch { data = rawText; }
+
+    if (!res.ok) throw new Error(
+      (Array.isArray(data) ? null : data?.message) ||
+      (Array.isArray(data) ? null : data?.hint)    ||
+      (Array.isArray(data) ? null : data?.details) ||
+      (Array.isArray(data) ? null : JSON.stringify(data)) ||
+      `HTTP ${res.status}`
+    );
+
+    setStatus("ok", "✓ Record inserted successfully!");
+    setTimeout(() => {
+      closeInsertModal();
+      loadLatestECG();
+      setStatus("", "");
+    }, 1200);
+
+  } catch (err) {
+    console.error("[ECG Insert] Error:", err);
+    setStatus("error", "Error: " + err.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>

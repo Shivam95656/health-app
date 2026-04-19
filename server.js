@@ -16,6 +16,8 @@ app.use("/iot",     require("./routes/iot.routes"));
 app.use("/final",   require("./routes/final.routes"));
 app.use("/gemini",  require("./routes/gemini.routes"));
 app.use("/cardio", require("./routes/cardio.routes"));
+app.use("/ecg",    require("./routes/ecg.routes"));
+ 
 
 
 

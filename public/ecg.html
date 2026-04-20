@@ -74,25 +74,29 @@
     .btn-primary:hover { background: var(--blue-hover); }
     .btn-purple { background: var(--purple); color: white; }
     .btn-purple:hover { background: #6d28d9; }
+    .btn-teal { background: var(--teal); color: white; }
+    .btn-teal:hover { background: #0f766e; }
     .btn-sm { padding: 6px 12px; font-size: 12px; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* ── ALERT ── */
-    .alert-inline { font-size: 13px; color: var(--danger); background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-sm); padding: 10px 14px; display: none; margin-bottom: 1.25rem; }
+    .alert-inline { font-size: 13px; border-radius: var(--radius-sm); padding: 10px 14px; display: none; margin-bottom: 1.25rem; }
     .alert-inline.show { display: block; }
+    .alert-inline.error   { color: var(--danger);  background: #fef2f2; border: 1px solid #fecaca; }
+    .alert-inline.warning { color: #92400e;         background: #fffbeb; border: 1px solid #fde68a; }
+    .alert-inline.success { color: var(--success);  background: #f0fdf4; border: 1px solid #bbf7d0; }
 
     /* ── ECG CARD ── */
     .ecg-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; }
     .ecg-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); }
-    .ecg-header-left { }
     .ecg-title { font-size: 14px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
     .ecg-title svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
     .ecg-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 3px; }
     .ecg-meta { display: flex; align-items: center; gap: 1rem; }
     .ecg-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-    .ecg-badge.normal   { background: rgba(5,150,105,0.2);  color: #6ee7b7; }
-    .ecg-badge.mild     { background: rgba(217,119,6,0.25); color: #fcd34d; }
-    .ecg-badge.severe   { background: rgba(220,38,38,0.25); color: #fca5a5; }
+    .ecg-badge.normal   { background: rgba(5,150,105,0.2);   color: #6ee7b7; }
+    .ecg-badge.mild     { background: rgba(217,119,6,0.25);  color: #fcd34d; }
+    .ecg-badge.severe   { background: rgba(220,38,38,0.25);  color: #fca5a5; }
     .ecg-badge.unknown  { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
     .ecg-body { padding: 0; background: #0f0f23; }
     .ecg-chart-wrap { position: relative; padding: 1rem 1.25rem 0.75rem; }
@@ -100,7 +104,6 @@
     .ecg-grid-info { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.05); }
     .ecg-info-pill { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px; }
     .ecg-info-pill span { color: rgba(255,255,255,0.8); font-weight: 600; }
-    /* Scrollbar for ECG window controls */
     .ecg-controls { display: flex; align-items: center; gap: 0.5rem; }
     .ecg-window-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 600; padding: 4px 10px; cursor: pointer; transition: all 0.15s; }
     .ecg-window-btn:hover, .ecg-window-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
@@ -121,8 +124,6 @@
     .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
     .card-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
     .card-body { padding: 1.5rem; }
-
-    /* ── GRID ── */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
 
     /* ── PLACEHOLDER ── */
@@ -174,6 +175,19 @@
     .urgency-Emergency { background: #fef2f2; color: #7f1d1d; }
     .disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
 
+    /* ── REPORT DOWNLOAD CARD ── */
+    .report-card { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4c1d95 100%); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .report-card-left { }
+    .report-card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .report-card-title svg { width: 18px; height: 18px; fill: none; stroke: #a78bfa; stroke-width: 2; stroke-linecap: round; }
+    .report-card-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; max-width: 480px; }
+    .report-features { display: flex; gap: 0.75rem; margin-top: 0.85rem; flex-wrap: wrap; }
+    .report-feature { font-size: 11px; font-weight: 600; color: #c4b5fd; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 3px 10px; }
+    .btn-download { background: white; color: #1e1b4b; font-size: 13px; font-weight: 700; padding: 11px 22px; border-radius: var(--radius-sm); border: none; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
+    .btn-download:hover { background: #ede9fe; }
+    .btn-download:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-download svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+
     /* ── HISTORY TABLE ── */
     .history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .history-table th { padding: 0.65rem 1.25rem; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: var(--slate-light); border-bottom: 1px solid var(--border); }
@@ -186,88 +200,44 @@
     /* ── ANIMATE ── */
     @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .animate { animation: rise 0.3s ease both; }
-    .d1 { animation-delay: 0.05s; }
-    .d2 { animation-delay: 0.1s; }
-    .d3 { animation-delay: 0.15s; }
-    .d4 { animation-delay: 0.2s; }
-
+    .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.1s; }
+    .d3 { animation-delay: 0.15s; } .d4 { animation-delay: 0.2s; }
 
     /* ── INSERT BUTTON ── */
     .btn-insert { background: #0d9488; color: white; }
     .btn-insert:hover { background: #0f766e; }
 
-    /* ── MODAL OVERLAY ── */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(15,23,42,0.55);
-      backdrop-filter: blur(4px); z-index: 100;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
-    }
+    /* ── MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-    .modal {
-      background: var(--white); border-radius: 18px;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
-      width: 520px; max-width: calc(100vw - 2rem);
-      max-height: 90vh; overflow-y: auto;
-      transform: translateY(16px) scale(0.97);
-      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
-    }
+    .modal { background: var(--white); border-radius: 18px; box-shadow: 0 24px 80px rgba(0,0,0,0.18); width: 520px; max-width: calc(100vw - 2rem); max-height: 90vh; overflow-y: auto; transform: translateY(16px) scale(0.97); transition: transform 0.25s cubic-bezier(0.16,1,0.3,1); }
     .modal-overlay.open .modal { transform: translateY(0) scale(1); }
-
-    .modal-header {
-      padding: 1.35rem 1.5rem 1rem;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    .modal-header { padding: 1.35rem 1.5rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .modal-title { font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .modal-title svg { width:18px; height:18px; fill:none; stroke:#0d9488; stroke-width:2; stroke-linecap:round; }
     .modal-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 6px; transition: all 0.12s; }
     .modal-close:hover { background: var(--slate-light); color: var(--text); }
     .modal-close svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
-
     .modal-body { padding: 1.25rem 1.5rem; }
-
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
     .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group.full { grid-column: 1 / -1; }
     .form-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
-    .form-input, .form-select, .form-textarea {
-      padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px;
-      font-size: 13px; font-family: inherit; color: var(--text);
-      background: var(--slate-light); transition: border-color 0.15s, box-shadow 0.15s;
-      outline: none;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      border-color: #0d9488; box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
-    }
+    .form-input, .form-select, .form-textarea { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--slate-light); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #0d9488; box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
     .form-textarea { resize: vertical; min-height: 80px; font-family: 'Courier New', monospace; font-size: 12px; }
     .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-    .generate-strip {
-      background: linear-gradient(135deg, #f0fdfa, #ecfdf5);
-      border: 1px solid #a7f3d0; border-radius: 10px;
-      padding: 0.85rem 1rem; margin-bottom: 1rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    }
+    .generate-strip { background: linear-gradient(135deg, #f0fdfa, #ecfdf5); border: 1px solid #a7f3d0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .generate-strip-text { font-size: 12px; color: #065f46; font-weight: 500; }
-    .btn-generate { background: #059669; color: white; font-size: 11px; font-weight: 700;
-      padding: 6px 14px; border-radius: 7px; border: none; cursor: pointer; transition: background 0.12s; white-space: nowrap; }
+    .btn-generate { background: #059669; color: white; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 7px; border: none; cursor: pointer; transition: background 0.12s; white-space: nowrap; }
     .btn-generate:hover { background: #047857; }
-
-    .modal-footer {
-      padding: 1rem 1.5rem 1.35rem;
-      border-top: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    }
+    .modal-footer { padding: 1rem 1.5rem 1.35rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .modal-status { font-size: 12px; color: var(--text-muted); min-height: 18px; }
     .modal-status.ok  { color: var(--success); font-weight: 600; }
     .modal-status.err { color: var(--danger);  font-weight: 600; }
-    .btn-submit { background: #0d9488; color: white; font-size: 13px; font-weight: 700;
-      padding: 10px 24px; border-radius: 9px; border: none; cursor: pointer; transition: background 0.12s; display: flex; align-items: center; gap: 7px; }
+    .btn-submit { background: #0d9488; color: white; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 9px; border: none; cursor: pointer; transition: background 0.12s; display: flex; align-items: center; gap: 7px; }
     .btn-submit:hover { background: #0f766e; }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-    /* ── LOADING SPINNER ── */
     .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
@@ -279,43 +249,33 @@
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="logo">
-        <div class="logo-mark">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
+        <div class="logo-mark"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
         <span class="logo-name">HeartGuard</span>
       </div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-label">Main</div>
       <a href="index.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Dashboard
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard
       </a>
       <a href="profile.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Profile
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
       </a>
       <a href="predict.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        Analysis
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Analysis
       </a>
       <a href="ecg.html" class="nav-item active">
-        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
-        ECG Analysis
+        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>ECG Analysis
       </a>
-       <a href="cardio.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
-        Predict 
+      <a href="cardio.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>Predict
       </a>
-
       <a href="profile.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
-        IoT Data
+        <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>IoT Data
       </a>
       <div class="nav-label">Settings</div>
       <a href="#" class="nav-item">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Settings
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Settings
       </a>
     </nav>
     <div class="sidebar-footer">
@@ -341,49 +301,46 @@
         <h1 class="page-title">ECG Analysis</h1>
         <p class="page-sub">Raw ECG waveform from Supabase — visualised and analysed for heart disease risk.</p>
       </div>
-      <div style="display:flex;gap:10px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="loadLatestECG()" id="loadBtn">
-          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
-          Load Latest ECG
+          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>Load Latest ECG
         </button>
         <button class="btn btn-insert" onclick="openInsertModal()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Insert ECG
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Insert ECG
         </button>
         <button class="btn btn-purple" onclick="runPrediction()" id="predictBtn" disabled>
-          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Predict Risk
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Predict Risk
+        </button>
+        <button class="btn btn-teal" onclick="downloadReport()" id="reportBtn" disabled>
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Download Report
         </button>
       </div>
     </div>
 
-    <!-- Error Alert -->
-    <div id="alertBox" class="alert-inline"></div>
+    <!-- Alert -->
+    <div id="alertBox" class="alert-inline error"></div>
 
     <!-- ECG Waveform Card -->
     <div class="ecg-card animate d1">
       <div class="ecg-header">
-        <div class="ecg-header-left">
+        <div>
           <div class="ecg-title">
-            <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
-            ECG Waveform
+            <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>ECG Waveform
           </div>
           <div class="ecg-sub" id="ecgSubText">Load a record to view the raw waveform</div>
         </div>
         <div class="ecg-meta">
           <div id="ecgLabelBadge" class="ecg-badge unknown">—</div>
           <div class="ecg-controls">
-            <button class="ecg-window-btn active" onclick="setWindow(this,1)" data-sec="1">1s</button>
-            <button class="ecg-window-btn"        onclick="setWindow(this,5)" data-sec="5">5s</button>
-            <button class="ecg-window-btn"        onclick="setWindow(this,0)" data-sec="0">All</button>
+            <button class="ecg-window-btn active" onclick="setWindow(this,1)">1s</button>
+            <button class="ecg-window-btn"        onclick="setWindow(this,5)">5s</button>
+            <button class="ecg-window-btn"        onclick="setWindow(this,0)">All</button>
           </div>
         </div>
       </div>
       <div class="ecg-body">
         <div class="ecg-chart-wrap">
-          <div class="ecg-canvas-container">
-            <canvas id="ecgCanvas"></canvas>
-          </div>
+          <div class="ecg-canvas-container"><canvas id="ecgCanvas"></canvas></div>
         </div>
         <div class="ecg-grid-info">
           <div class="ecg-info-pill">Heart Rate <span id="infoHR">—</span> bpm</div>
@@ -403,7 +360,7 @@
           <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;">Load an ECG to begin</div>
           <div style="max-width:380px;margin:0 auto 1.5rem;line-height:1.7;color:var(--text-sub);">
             Click <strong>Load Latest ECG</strong> to fetch your raw ECG waveform from Supabase.
-            The graph will render the raw samples, then click <strong>Predict Risk</strong> to run the heart disease ML model.
+            Then click <strong>Predict Risk</strong> to run the AI model, and <strong>Download Report</strong> to get a clinical PDF.
           </div>
         </div>
       </div>
@@ -417,7 +374,7 @@
         <div class="stat-card" id="statRiskCard">
           <div class="stat-label">Overall Risk Score</div>
           <div class="stat-value" id="statRiskVal">—</div>
-          <div class="stat-desc"  id="statRiskDesc">Heart disease probability</div>
+          <div class="stat-desc" id="statRiskDesc">Heart disease probability</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">ECG Heart Rate</div>
@@ -434,6 +391,30 @@
           <div class="stat-value" style="font-size:18px;padding-top:4px;" id="statUrgency">—</div>
           <div class="stat-desc">AI-assessed priority</div>
         </div>
+      </div>
+
+      <!-- PDF Report Download Card -->
+      <div class="report-card animate d1">
+        <div class="report-card-left">
+          <div class="report-card-title">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Clinical ECG Report — PDF
+          </div>
+          <div class="report-card-desc">Generate a full clinical report ready to hand to your cardiologist or GP. Includes ECG parameters, risk scores, disease breakdown, AI interpretation, recommendations, and a doctor signature block.</div>
+          <div class="report-features">
+            <span class="report-feature">Patient Summary</span>
+            <span class="report-feature">ECG Parameters</span>
+            <span class="report-feature">Risk Score Gauge</span>
+            <span class="report-feature">Disease Breakdown</span>
+            <span class="report-feature">AI Interpretation</span>
+            <span class="report-feature">Clinical Recommendations</span>
+            <span class="report-feature">Doctor Stamp Block</span>
+          </div>
+        </div>
+        <button class="btn-download" onclick="downloadReport()" id="reportBtnInline">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF Report
+        </button>
       </div>
 
       <!-- Gauge + Factor Bars -->
@@ -459,7 +440,6 @@
             </div>
           </div>
         </div>
-
         <div class="card">
           <div class="card-header">
             <div><div class="card-title">Risk Factor Contributions</div><div class="card-sub">How each parameter influences the result</div></div>
@@ -488,7 +468,7 @@
         <div class="card-header">
           <div>
             <div class="card-title">AI Health Insights</div>
-            <div class="card-sub">Powered by Google Gemini — interpreted from ECG waveform + profile</div>
+            <div class="card-sub" id="geminiModelLabel">Powered by Google Gemini — interpreted from ECG waveform + profile</div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
             <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -505,158 +485,86 @@
         <div class="card-header">
           <div><div class="card-title">ECG Record History</div><div class="card-sub">Last 10 ECG recordings — click to load waveform</div></div>
           <button class="btn btn-sm btn-primary" onclick="loadHistory()">
-            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
-            Refresh
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>Refresh
           </button>
         </div>
         <div id="historyPanel">
-          <div class="placeholder" style="padding:2rem;">Loading ECG history...</div>
+          <div class="placeholder" style="padding:2rem;"><div>Loading ECG history...</div></div>
         </div>
       </div>
 
     </div><!-- /resultsSection -->
-
   </main>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   AUTH
-═══════════════════════════════════════════════ */
+/* ══ AUTH ══ */
 const user_id = localStorage.getItem("user_id");
 if (!user_id) window.location.href = "login.html";
-
 const email = localStorage.getItem("user_email") || "user@email.com";
-document.getElementById("sideEmail").textContent = email;
+document.getElementById("sideEmail").textContent  = email;
 document.getElementById("sideAvatar").textContent = email[0].toUpperCase();
+function signOut() { localStorage.clear(); window.location.href = "login.html"; }
 
-function signOut() {
-  localStorage.clear();
-  window.location.href = "login.html";
-}
+/* ══ STATE ══ */
+let ecgRecord = null;
+let ecgChart  = null;
+let donutInst = null;
+let windowSec = 1;
 
-/* ═══════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════ */
-let ecgRecord   = null;   // current ECG record from Supabase
-let ecgChart    = null;   // Chart.js instance
-let donutInst   = null;
-let windowSec   = 1;      // current waveform window in seconds (0 = all)
+const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
 
-/* ═══════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════ */
-function showAlert(msg) {
+/* ══ HELPERS ══ */
+function showAlert(msg, type = "error") {
   const el = document.getElementById("alertBox");
   el.textContent = msg;
-  el.classList.add("show");
+  el.className   = `alert-inline ${type} show`;
 }
 function clearAlert() {
   const el = document.getElementById("alertBox");
   el.textContent = "";
-  el.classList.remove("show");
+  el.className   = "alert-inline error";
 }
-
-function riskColor(pct) {
-  if (pct >= 65) return "#dc2626";
-  if (pct >= 35) return "#d97706";
-  return "#059669";
-}
-function riskClass(pct) {
-  if (pct >= 65) return "high";
-  if (pct >= 35) return "medium";
-  return "low";
-}
-function riskLabel(pct) {
-  if (pct >= 65) return "High Risk";
-  if (pct >= 35) return "Moderate Risk";
-  return "Low Risk";
-}
-
+function riskColor(pct) { return pct >= 65 ? "#dc2626" : pct >= 35 ? "#d97706" : "#059669"; }
+function riskClass(pct) { return pct >= 65 ? "high"    : pct >= 35 ? "medium"  : "low"; }
+function riskLabel(pct) { return pct >= 65 ? "High Risk" : pct >= 35 ? "Moderate Risk" : "Low Risk"; }
 function labelBadgeClass(label = "") {
   const l = label.toLowerCase();
   if (!l || l === "normal" || l === "n") return "normal";
   if (l.includes("afib") || l.includes("st") || l.includes("svt") || l.includes("pvc")) return "mild";
   return "severe";
 }
-
 function fmtDate(ts) {
   if (!ts) return "—";
   const d = new Date(ts);
-  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) +
-         " " + d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" }) + " " +
+         d.toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" });
 }
 
-/* ═══════════════════════════════════════════════
-   ECG WAVEFORM CHART
-═══════════════════════════════════════════════ */
+/* ══ ECG CHART ══ */
 function renderECGChart(samples, sampleRate, windowSeconds) {
-  const sr = sampleRate || 360;
-
-  // Determine slice
+  const sr  = sampleRate || 360;
   let slice = samples;
-  if (windowSeconds > 0) {
-    const pts = Math.min(windowSeconds * sr, samples.length);
-    slice = samples.slice(0, pts);
-  }
-
-  // Downsample for performance: max 2000 points on screen
-  const MAX_PTS = 2000;
+  if (windowSeconds > 0) slice = samples.slice(0, Math.min(windowSeconds * sr, samples.length));
+  const MAX_PTS   = 2000;
   let displayData = slice;
   if (slice.length > MAX_PTS) {
     const step = Math.ceil(slice.length / MAX_PTS);
     displayData = slice.filter((_, i) => i % step === 0);
   }
-
   const labels = displayData.map((_, i) => (i / (displayData.length / (slice.length / sr))).toFixed(3));
-
-  if (ecgChart) {
-    ecgChart.data.labels = labels;
-    ecgChart.data.datasets[0].data = displayData;
-    ecgChart.update("none");
-    return;
-  }
-
+  if (ecgChart) { ecgChart.data.labels = labels; ecgChart.data.datasets[0].data = displayData; ecgChart.update("none"); return; }
   const ctx = document.getElementById("ecgCanvas").getContext("2d");
   ecgChart = new Chart(ctx, {
     type: "line",
-    data: {
-      labels,
-      datasets: [{
-        data:           displayData,
-        borderColor:    "#a78bfa",
-        borderWidth:    1.5,
-        pointRadius:    0,
-        tension:        0.2,
-        fill:           false,
-      }]
-    },
+    data: { labels, datasets: [{ data: displayData, borderColor: "#a78bfa", borderWidth: 1.5, pointRadius: 0, tension: 0.2, fill: false }] },
     options: {
-      animation:   false,
-      responsive:  true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          mode: "index",
-          intersect: false,
-          callbacks: {
-            title: items => `t = ${items[0].label}s`,
-            label: item  => `${item.raw.toFixed(4)} mV`,
-          }
-        }
-      },
+      animation: false, responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { mode: "index", intersect: false, callbacks: { title: i => `t = ${i[0].label}s`, label: i => `${i.raw.toFixed(4)} mV` } } },
       scales: {
-        x: {
-          grid:   { color: "rgba(255,255,255,0.05)" },
-          ticks:  { color: "rgba(255,255,255,0.35)", font: { size: 10 }, maxTicksLimit: 10 },
-          title:  { display: true, text: "Time (s)", color: "rgba(255,255,255,0.3)", font: { size: 10 } }
-        },
-        y: {
-          grid:   { color: "rgba(255,255,255,0.05)" },
-          ticks:  { color: "rgba(255,255,255,0.35)", font: { size: 10 } },
-          title:  { display: true, text: "Amplitude (mV)", color: "rgba(255,255,255,0.3)", font: { size: 10 } }
-        }
+        x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "rgba(255,255,255,0.35)", font: { size: 10 }, maxTicksLimit: 10 }, title: { display: true, text: "Time (s)", color: "rgba(255,255,255,0.3)", font: { size: 10 } } },
+        y: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "rgba(255,255,255,0.35)", font: { size: 10 } }, title: { display: true, text: "Amplitude (mV)", color: "rgba(255,255,255,0.3)", font: { size: 10 } } }
       }
     }
   });
@@ -666,48 +574,23 @@ function setWindow(btn, sec) {
   document.querySelectorAll(".ecg-window-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
   windowSec = sec;
-  if (ecgRecord?.samples?.length) {
-    renderECGChart(ecgRecord.samples, ecgRecord.sample_rate, windowSec);
-  }
+  if (ecgRecord?.samples?.length) renderECGChart(ecgRecord.samples, ecgRecord.sample_rate, windowSec);
 }
 
-/* ═══════════════════════════════════════════════
-   LOAD LATEST ECG
-═══════════════════════════════════════════════ */
+/* ══ LOAD LATEST ECG ══ */
 async function loadLatestECG() {
   clearAlert();
   const btn = document.getElementById("loadBtn");
   btn.disabled = true;
   btn.innerHTML = `<span class="spinner"></span> Loading...`;
-
-  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
-
   try {
-    // Call Supabase REST API directly — works without server restart
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/ecg_data?user_id=eq.${user_id}&order=created_at.desc&limit=1`,
-      {
-        headers: {
-          "apikey":        SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
-        },
-      }
-    );
-
+    const res  = await fetch(`${SUPABASE_URL}/rest/v1/ecg_data?user_id=eq.${user_id}&order=created_at.desc&limit=1`, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } });
     const rows = await res.json();
-
-    if (!rows || !rows.length) {
-      document.getElementById("ecgSubText").textContent = "No ECG records found — upload a reading to get started.";
-      loadHistory();
-      return;
-    }
-
-    const data = rows[0];
-    populateECGCard(data);
+    if (!rows?.length) { document.getElementById("ecgSubText").textContent = "No ECG records found — upload a reading to get started."; loadHistory(); return; }
+    populateECGCard(rows[0]);
     document.getElementById("predictBtn").disabled = false;
+    document.getElementById("reportBtn").disabled  = false;
     loadHistory();
-
   } catch (err) {
     showAlert("Could not load ECG: " + err.message);
   } finally {
@@ -718,147 +601,73 @@ async function loadLatestECG() {
 
 function populateECGCard(record) {
   ecgRecord = record;
-
-  // Header meta
   const labelText = record.label || "Unknown";
   const badge = document.getElementById("ecgLabelBadge");
   badge.textContent = labelText;
   badge.className   = `ecg-badge ${labelBadgeClass(labelText)}`;
-
-  document.getElementById("ecgSubText").textContent =
-    `Record from ${fmtDate(record.created_at)} — ${(record.samples || []).length} samples @ ${record.sample_rate || 360} Hz`;
-
-  // Info strip
-  document.getElementById("infoHR").textContent      = record.heart_rate ?? "—";
-  document.getElementById("infoSR").textContent      = record.sample_rate ?? "—";
-  document.getElementById("infoDur").textContent     = record.duration_sec ?? "—";
-  document.getElementById("infoSamples").textContent = (record.samples || []).length;
-  document.getElementById("infoDate").textContent    = fmtDate(record.created_at);
-
-  // Render waveform
-  const samples = record.samples || [];
-  if (samples.length) {
-    renderECGChart(samples, record.sample_rate, windowSec);
-  }
+  document.getElementById("ecgSubText").textContent    = `Record from ${fmtDate(record.created_at)} — ${(record.samples||[]).length} samples @ ${record.sample_rate||360} Hz`;
+  document.getElementById("infoHR").textContent        = record.heart_rate ?? "—";
+  document.getElementById("infoSR").textContent        = record.sample_rate ?? "—";
+  document.getElementById("infoDur").textContent       = record.duration_sec ?? "—";
+  document.getElementById("infoSamples").textContent   = (record.samples||[]).length;
+  document.getElementById("infoDate").textContent      = fmtDate(record.created_at);
+  document.getElementById("reportBtn").disabled        = false;
+  document.getElementById("reportBtnInline").disabled  = false;
+  if ((record.samples||[]).length) renderECGChart(record.samples, record.sample_rate, windowSec);
 }
 
-/* ═══════════════════════════════════════════════
-   LOAD SPECIFIC ECG RECORD BY ID
-═══════════════════════════════════════════════ */
+/* ══ LOAD BY ID ══ */
 async function loadRecordById(id) {
   clearAlert();
-  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
   try {
-    const res  = await fetch(
-      `${SUPABASE_URL}/rest/v1/ecg_data?id=eq.${id}&limit=1`,
-      {
-        headers: {
-          "apikey":        SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
-        },
-      }
-    );
+    const res  = await fetch(`${SUPABASE_URL}/rest/v1/ecg_data?id=eq.${id}&limit=1`, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } });
     const rows = await res.json();
     if (!rows?.length) throw new Error("Record not found");
-    const data = rows[0];
-    populateECGCard(data);
-    document.getElementById("predictBtn").disabled = false;
     if (ecgChart) { ecgChart.destroy(); ecgChart = null; }
-    if (data.samples?.length) renderECGChart(data.samples, data.sample_rate, windowSec);
-  } catch (err) {
-    showAlert("Could not load record: " + err.message);
-  }
+    populateECGCard(rows[0]);
+    document.getElementById("predictBtn").disabled = false;
+  } catch (err) { showAlert("Could not load record: " + err.message); }
 }
 
-/* ═══════════════════════════════════════════════
-   HISTORY
-═══════════════════════════════════════════════ */
+/* ══ HISTORY ══ */
 async function loadHistory() {
   const panel = document.getElementById("historyPanel");
   panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>Loading...</div></div>`;
-
-  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
-
   try {
-    const res  = await fetch(
-      `${SUPABASE_URL}/rest/v1/ecg_data?user_id=eq.${user_id}&order=created_at.desc&limit=10&select=id,created_at,heart_rate,label,duration_sec,sample_rate`,
-      {
-        headers: {
-          "apikey":        SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
-        },
-      }
-    );
+    const res  = await fetch(`${SUPABASE_URL}/rest/v1/ecg_data?user_id=eq.${user_id}&order=created_at.desc&limit=10&select=id,created_at,heart_rate,label,duration_sec,sample_rate`, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } });
     const rows = await res.json();
-
-    if (!rows.length) {
-      panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>No ECG records found.</div></div>`;
-      return;
-    }
-
+    if (!rows.length) { panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>No ECG records found.</div></div>`; return; }
     panel.innerHTML = `
       <table class="history-table">
-        <thead>
+        <thead><tr><th>Recorded</th><th>Heart Rate</th><th>Label</th><th>Duration</th><th>Sample Rate</th><th></th></tr></thead>
+        <tbody>${rows.map(r => `
           <tr>
-            <th>Recorded</th>
-            <th>Heart Rate</th>
-            <th>Label</th>
-            <th>Duration</th>
-            <th>Sample Rate</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.map(r => `
-            <tr>
-              <td>${fmtDate(r.created_at)}</td>
-              <td>${r.heart_rate ?? "—"} bpm</td>
-              <td><span style="font-weight:600;color:${labelBadgeClass(r.label)==='normal'?'var(--success)':labelBadgeClass(r.label)==='mild'?'var(--warning)':'var(--danger)'}">${r.label || "—"}</span></td>
-              <td>${r.duration_sec ?? "—"}s</td>
-              <td>${r.sample_rate ?? "—"} Hz</td>
-              <td><button class="load-row-btn" onclick="loadRecordById('${r.id}')">Load</button></td>
-            </tr>
-          `).join("")}
+            <td>${fmtDate(r.created_at)}</td>
+            <td>${r.heart_rate ?? "—"} bpm</td>
+            <td><span style="font-weight:600;color:${labelBadgeClass(r.label)==='normal'?'var(--success)':labelBadgeClass(r.label)==='mild'?'var(--warning)':'var(--danger)'}">${r.label||"—"}</span></td>
+            <td>${r.duration_sec ?? "—"}s</td>
+            <td>${r.sample_rate ?? "—"} Hz</td>
+            <td><button class="load-row-btn" onclick="loadRecordById('${r.id}')">Load</button></td>
+          </tr>`).join("")}
         </tbody>
       </table>`;
-
-  } catch (err) {
-    panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>Error: ${err.message}</div></div>`;
-  }
+  } catch (err) { panel.innerHTML = `<div class="placeholder" style="padding:1.5rem;"><div>Error: ${err.message}</div></div>`; }
 }
 
-/* ═══════════════════════════════════════════════
-   RUN PREDICTION
-═══════════════════════════════════════════════ */
+/* ══ PREDICTION ══ */
 async function runPrediction() {
   if (!ecgRecord) { showAlert("Load an ECG record first."); return; }
   clearAlert();
-
   const btn = document.getElementById("predictBtn");
   btn.disabled = true;
   btn.innerHTML = `<span class="spinner"></span> Analysing...`;
-
   document.getElementById("initialPlaceholder").style.display = "none";
-
   try {
-    const res  = await fetch(`/ecg/predict/${user_id}`, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ record_id: ecgRecord.id }),
-    });
+    const res  = await fetch(`/ecg/predict/${user_id}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ record_id: ecgRecord.id }) });
     const data = await res.json();
-
     if (data.error) throw new Error(data.error);
-
-    // Soft warning when no profile exists — prediction still runs with clinical defaults
-    if (data.profile_missing) {
-      showAlert('⚠️ No profile found — prediction used clinical defaults. Fill in your profile for personalised results.', 'warning');
-    }
-
+    if (data.profile_missing) showAlert("⚠️ No profile found — prediction used clinical defaults. Fill in your profile for personalised results.", "warning");
     renderResults(data);
-
   } catch (err) {
     showAlert("Prediction failed: " + err.message);
     document.getElementById("initialPlaceholder").style.display = "";
@@ -868,22 +677,67 @@ async function runPrediction() {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   RENDER RESULTS
-═══════════════════════════════════════════════ */
+/* ══ DOWNLOAD REPORT ══ */
+async function downloadReport() {
+  if (!ecgRecord) { showAlert("Load an ECG record first, then download the report."); return; }
+  clearAlert();
+
+  const btn1 = document.getElementById("reportBtn");
+  const btn2 = document.getElementById("reportBtnInline");
+  const origHtml1 = btn1.innerHTML;
+  const origHtml2 = btn2.innerHTML;
+
+  btn1.disabled = true; btn2.disabled = true;
+  btn1.innerHTML = `<span class="spinner"></span> Generating...`;
+  btn2.innerHTML = `<span class="spinner" style="border-top-color:#1e1b4b;border-color:rgba(30,27,75,0.2)"></span> Generating PDF...`;
+
+  try {
+    const res = await fetch(`/ecg/report/${user_id}`, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ record_id: ecgRecord.id }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Report generation failed" }));
+      throw new Error(err.error || err.detail || "Unknown error");
+    }
+
+    // Stream blob and trigger download
+    const blob     = await res.blob();
+    const url      = URL.createObjectURL(blob);
+    const a        = document.createElement("a");
+    const filename = `HeartGuard_ECG_Report_${ecgRecord.id?.slice(0,8) || "report"}.pdf`;
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showAlert("✓ Report downloaded successfully!", "success");
+  } catch (err) {
+    showAlert("Report generation failed: " + err.message);
+  } finally {
+    btn1.disabled = false; btn2.disabled = false;
+    btn1.innerHTML = origHtml1;
+    btn2.innerHTML = origHtml2;
+  }
+}
+
+/* ══ RENDER RESULTS ══ */
 function renderResults(data) {
   const pct     = data.risk_percentage ?? 0;
   const level   = riskClass(pct);
   const gemini  = data.gemini || {};
   const diseases= data.disease_breakdown || [];
-  const factors = data.top_features || data.risk_factors || data.feature_importances || [];
+  const factors = data.top_features || data.risk_factors || [];
 
   document.getElementById("resultsSection").style.display = "";
   document.getElementById("initialPlaceholder").style.display = "none";
+  document.getElementById("reportBtn").disabled        = false;
+  document.getElementById("reportBtnInline").disabled  = false;
 
-  /* Stat Cards */
-  const riskCard = document.getElementById("statRiskCard");
-  riskCard.className = `stat-card risk-${level}`;
+  // Stat cards
+  document.getElementById("statRiskCard").className = `stat-card risk-${level}`;
   document.getElementById("statRiskVal").textContent  = `${pct}%`;
   document.getElementById("statRiskDesc").textContent = riskLabel(pct);
   document.getElementById("statHR").textContent       = ecgRecord?.heart_rate ?? "—";
@@ -892,51 +746,44 @@ function renderResults(data) {
   urgEl.textContent = gemini.urgency || "—";
   urgEl.style.color = { Routine:"var(--success)", Soon:"var(--warning)", Urgent:"#ea580c", Emergency:"var(--danger)" }[gemini.urgency] || "var(--text)";
 
-  /* Gauge */
-  const offset = 220 - (pct / 100) * 220;
-  document.getElementById("gaugePath").style.strokeDashoffset = offset;
+  // Gauge
+  document.getElementById("gaugePath").style.strokeDashoffset = 220 - (pct / 100) * 220;
   document.getElementById("gaugePath").style.stroke           = riskColor(pct);
   document.getElementById("gaugeText").textContent            = `${pct}%`;
   document.getElementById("gaugeLabel").textContent           = riskLabel(pct);
-  document.getElementById("riskBadge").innerHTML              =
-    `<span class="risk-badge ${level}">${riskLabel(pct)}</span>`;
+  document.getElementById("riskBadge").innerHTML              = `<span class="risk-badge ${level}">${riskLabel(pct)}</span>`;
 
-  /* Factor Bars */
+  // Gemini model label
+  if (gemini.gemini_model) {
+    document.getElementById("geminiModelLabel").textContent = `Powered by ${gemini.gemini_model} — interpreted from ECG waveform + profile`;
+  }
+
+  // Factor bars
   const fbEl = document.getElementById("factorBars");
   if (factors.length) {
-    const maxVal = Math.max(...factors.map(f => f.importance ?? f.value ?? f.val ?? 0));
+    const maxVal = Math.max(...factors.map(f => f.importance ?? f.value ?? 0));
     fbEl.innerHTML = factors.map(f => {
-      const val = f.importance ?? f.value ?? f.val ?? 0;
+      const val  = f.importance ?? f.value ?? 0;
       const pct2 = maxVal > 0 ? Math.round((val / maxVal) * 100) : 0;
-      return `
-        <div class="factor-row">
-          <div class="factor-label">${f.label || f.name}</div>
-          <div class="factor-bar-wrap"><div class="factor-bar" style="width:${pct2}%;background:${f.color||riskColor(pct2)};"></div></div>
-          <div class="factor-val">${typeof val === "number" ? val.toFixed(1) : val}</div>
-        </div>`;
+      return `<div class="factor-row">
+        <div class="factor-label">${f.label || f.name}</div>
+        <div class="factor-bar-wrap"><div class="factor-bar" style="width:${pct2}%;background:${f.color||riskColor(pct2)};"></div></div>
+        <div class="factor-val">${typeof val==="number" ? val.toFixed(1) : val}</div>
+      </div>`;
     }).join("");
   } else {
     fbEl.innerHTML = `<div class="placeholder" style="padding:2rem;"><div>No factor data returned.</div></div>`;
   }
 
-  /* Disease Donut */
+  // Disease donut
   if (donutInst) { donutInst.destroy(); donutInst = null; }
   if (diseases.length) {
     const COLORS = ["#7c3aed","#2563eb","#0d9488","#d97706","#dc2626"];
-    const ctx = document.getElementById("donutChart").getContext("2d");
-    donutInst = new Chart(ctx, {
+    donutInst = new Chart(document.getElementById("donutChart").getContext("2d"), {
       type: "doughnut",
-      data: {
-        labels:   diseases.map(d => d.name),
-        datasets: [{ data: diseases.map(d => d.pct), backgroundColor: COLORS, borderWidth: 2, borderColor: "#fff" }]
-      },
-      options: {
-        cutout: "65%",
-        plugins: { legend: { position: "bottom", labels: { font: { size: 11 }, padding: 8 } }, tooltip: { callbacks: { label: i => ` ${i.raw}%` } } },
-        animation: { duration: 800 }
-      }
+      data: { labels: diseases.map(d => d.name), datasets: [{ data: diseases.map(d => d.pct), backgroundColor: COLORS, borderWidth: 2, borderColor: "#fff" }] },
+      options: { cutout: "65%", plugins: { legend: { position:"bottom", labels: { font: { size:11 }, padding:8 } }, tooltip: { callbacks: { label: i => ` ${i.raw}%` } } }, animation: { duration:800 } }
     });
-
     document.getElementById("diseaseCards").innerHTML = diseases.map((d, i) => `
       <div class="disease-card">
         <div class="disease-name">${d.name}</div>
@@ -945,108 +792,56 @@ function renderResults(data) {
       </div>`).join("");
   }
 
-  /* Gemini Panel */
-  const gp = document.getElementById("geminiPanel");
-  gp.innerHTML = `
-    ${gemini.ecgInterpretation ? `
-      <div class="gemini-ecg-interp">
-        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
-        <div><strong>ECG Interpretation:</strong> ${gemini.ecgInterpretation}</div>
-      </div>` : ""}
+  // Gemini panel
+  document.getElementById("geminiPanel").innerHTML = `
+    ${gemini.ecgInterpretation ? `<div class="gemini-ecg-interp"><svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg><div><strong>ECG Interpretation:</strong> ${gemini.ecgInterpretation}</div></div>` : ""}
     ${gemini.summary ? `<p class="gemini-summary">${gemini.summary}</p>` : ""}
     ${gemini.primaryConcern ? `<div class="gemini-concern">⚠️ Primary Concern: ${gemini.primaryConcern}</div>` : ""}
-    ${gemini.recommendations?.length ? `
-      <div class="gemini-block">
-        <div class="gemini-block-title">Recommendations</div>
-        <ul class="gemini-list">${gemini.recommendations.map(r => `<li>${r}</li>`).join("")}</ul>
-      </div>` : ""}
-    ${gemini.lifestyle?.length ? `
-      <div class="gemini-block">
-        <div class="gemini-block-title">Lifestyle Changes</div>
-        <ul class="gemini-list">${gemini.lifestyle.map(l => `<li>${l}</li>`).join("")}</ul>
-      </div>` : ""}
-    ${gemini.urgency ? `
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
-        <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Urgency</span>
-        <span class="urgency-badge urgency-${gemini.urgency}">${gemini.urgency}</span>
-      </div>` : ""}
-    ${gemini.disclaimer ? `<div class="disclaimer">${gemini.disclaimer}</div>` : ""}
-  `;
+    ${gemini.recommendations?.length ? `<div class="gemini-block"><div class="gemini-block-title">Recommendations</div><ul class="gemini-list">${gemini.recommendations.map(r=>`<li>${r}</li>`).join("")}</ul></div>` : ""}
+    ${gemini.lifestyle?.length ? `<div class="gemini-block"><div class="gemini-block-title">Lifestyle Changes</div><ul class="gemini-list">${gemini.lifestyle.map(l=>`<li>${l}</li>`).join("")}</ul></div>` : ""}
+    ${gemini.urgency ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;"><span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Urgency</span><span class="urgency-badge urgency-${gemini.urgency}">${gemini.urgency}</span></div>` : ""}
+    ${gemini.disclaimer ? `<div class="disclaimer">${gemini.disclaimer}</div>` : ""}`;
 
-  // Scroll to results
-  document.getElementById("resultsSection").scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById("resultsSection").scrollIntoView({ behavior:"smooth", block:"start" });
 }
 
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
-window.addEventListener("DOMContentLoaded", () => {
-  loadLatestECG();
-});
+window.addEventListener("DOMContentLoaded", () => { loadLatestECG(); });
 </script>
 
-<!-- ══ INSERT ECG MODAL ══ -->
+<!-- ══ INSERT MODAL ══ -->
 <div class="modal-overlay" id="insertModal" onclick="closeOnBackdrop(event)">
   <div class="modal">
-
     <div class="modal-header">
-      <div class="modal-title">
-        <svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>
-        Insert ECG Record
-      </div>
-      <button class="modal-close" onclick="closeInsertModal()">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
+      <div class="modal-title"><svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg>Insert ECG Record</div>
+      <button class="modal-close" onclick="closeInsertModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
-
     <div class="modal-body">
-
-      <!-- Quick-fill strip -->
       <div class="generate-strip">
         <div class="generate-strip-text">⚡ Auto-fill with realistic synthetic ECG waveform</div>
         <button class="btn-generate" onclick="fillSyntheticECG()">Generate Sample</button>
       </div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Heart Rate (bpm)</label>
-          <input class="form-input" id="ins_hr" type="number" placeholder="72" min="30" max="220" value="72"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Sample Rate (Hz)</label>
-          <input class="form-input" id="ins_sr" type="number" placeholder="360" value="360"/>
-        </div>
+        <div class="form-group"><label class="form-label">Heart Rate (bpm)</label><input class="form-input" id="ins_hr" type="number" placeholder="72" min="30" max="220" value="72"/></div>
+        <div class="form-group"><label class="form-label">Sample Rate (Hz)</label><input class="form-input" id="ins_sr" type="number" placeholder="360" value="360"/></div>
       </div>
-
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Arrhythmia Label</label>
           <select class="form-select" id="ins_label">
-            <option value="Normal">Normal</option>
-            <option value="AFIB">AFIB</option>
-            <option value="ST-elevation">ST-elevation</option>
-            <option value="ST-depression">ST-depression</option>
-            <option value="T-wave inversion">T-wave inversion</option>
-            <option value="PVC">PVC</option>
-            <option value="SVT">SVT</option>
-            <option value="LVH">LVH</option>
-            <option value="LBBB">LBBB</option>
+            <option value="Normal">Normal</option><option value="AFIB">AFIB</option>
+            <option value="ST-elevation">ST-elevation</option><option value="ST-depression">ST-depression</option>
+            <option value="T-wave inversion">T-wave inversion</option><option value="PVC">PVC</option>
+            <option value="SVT">SVT</option><option value="LVH">LVH</option><option value="LBBB">LBBB</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">Duration (sec)</label>
-          <input class="form-input" id="ins_dur" type="number" placeholder="10" step="0.1" value="10"/>
-        </div>
+        <div class="form-group"><label class="form-label">Duration (sec)</label><input class="form-input" id="ins_dur" type="number" placeholder="10" step="0.1" value="10"/></div>
       </div>
-
       <div class="form-group full" style="margin-bottom:0.25rem;">
         <label class="form-label">Samples (JSON float array)</label>
         <textarea class="form-textarea" id="ins_samples" placeholder="[0.12, 0.34, -0.05, ...]" rows="4"></textarea>
         <div class="form-hint">Paste raw ADC/mV values as a JSON array, or click Generate Sample above.</div>
       </div>
-
     </div>
-
     <div class="modal-footer">
       <div class="modal-status" id="insertStatus"></div>
       <button class="btn-submit" id="insertSubmitBtn" onclick="submitInsert()">
@@ -1054,137 +849,64 @@ window.addEventListener("DOMContentLoaded", () => {
         Insert Record
       </button>
     </div>
-
   </div>
 </div>
 
 <script>
-/* ══ INSERT MODAL ══ */
 function openInsertModal()  { document.getElementById("insertModal").classList.add("open"); }
 function closeInsertModal() { document.getElementById("insertModal").classList.remove("open"); }
 function closeOnBackdrop(e) { if (e.target === document.getElementById("insertModal")) closeInsertModal(); }
 
 function fillSyntheticECG() {
-  const sr  = parseInt(document.getElementById("ins_sr").value)  || 360;
+  const sr = parseInt(document.getElementById("ins_sr").value) || 360;
   const dur = parseFloat(document.getElementById("ins_dur").value) || 10;
-  const hr  = parseInt(document.getElementById("ins_hr").value)   || 72;
+  const hr  = parseInt(document.getElementById("ins_hr").value) || 72;
   const n   = Math.round(sr * dur);
-
-  // Synthesise a plausible ECG: baseline + P + QRS complex + T wave per beat
-  const bpm    = hr;
-  const period = sr * 60 / bpm;   // samples per beat
+  const period  = sr * 60 / hr;
   const samples = [];
-
   for (let i = 0; i < n; i++) {
-    const phase = (i % period) / period;   // 0..1 within one beat
+    const phase = (i % period) / period;
     let v = 0;
-    // P wave (0.05–0.15)
-    if (phase >= 0.05 && phase < 0.15)
-      v += 0.15 * Math.sin(Math.PI * (phase - 0.05) / 0.10);
-    // QRS complex (0.20–0.30)
-    if (phase >= 0.20 && phase < 0.23) v -= 0.10;                          // Q
-    if (phase >= 0.23 && phase < 0.27)
-      v += 1.20 * Math.sin(Math.PI * (phase - 0.23) / 0.04);               // R
-    if (phase >= 0.27 && phase < 0.30) v -= 0.15;                          // S
-    // T wave (0.35–0.55)
-    if (phase >= 0.35 && phase < 0.55)
-      v += 0.35 * Math.sin(Math.PI * (phase - 0.35) / 0.20);
-    // noise
-    v += (Math.random() - 0.5) * 0.025;
+    if (phase >= 0.05 && phase < 0.15) v += 0.15 * Math.sin(Math.PI * (phase-0.05)/0.10);
+    if (phase >= 0.20 && phase < 0.23) v -= 0.10;
+    if (phase >= 0.23 && phase < 0.27) v += 1.20 * Math.sin(Math.PI * (phase-0.23)/0.04);
+    if (phase >= 0.27 && phase < 0.30) v -= 0.15;
+    if (phase >= 0.35 && phase < 0.55) v += 0.35 * Math.sin(Math.PI * (phase-0.35)/0.20);
+    v += (Math.random()-0.5) * 0.025;
     samples.push(parseFloat(v.toFixed(4)));
   }
-
   document.getElementById("ins_samples").value = JSON.stringify(samples);
-  document.getElementById("ins_dur").value = dur;
 }
 
 async function submitInsert() {
   const status  = document.getElementById("insertStatus");
   const btn     = document.getElementById("insertSubmitBtn");
   const sampRaw = document.getElementById("ins_samples").value.trim();
-
-  function setStatus(type, msg) {
-    status.textContent = msg;
-    status.className   = "modal-status" + (type === "ok" ? " ok" : type === "error" ? " err" : "");
-  }
-
-  if (!sampRaw) { setStatus("error", "Samples are required."); return; }
-
+  function setStatus(type, msg) { status.textContent = msg; status.className = "modal-status" + (type==="ok"?" ok":type==="error"?" err":""); }
+  if (!sampRaw) { setStatus("error","Samples are required."); return; }
   let parsedSamples;
-  try { parsedSamples = JSON.parse(sampRaw); }
-  catch { setStatus("error", "Invalid JSON in samples field."); return; }
-
-  btn.disabled = true;
-  setStatus("", "Inserting…");
-
-  // ── Direct Supabase REST insert (bypasses Express so no server restart needed) ──
-  const SUPABASE_URL = "https://epsjghqhagdworfvmrto.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwc2pnaHFoYWdkd29yZnZtcnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTk3ODgsImV4cCI6MjA5MDE5NTc4OH0.DSbqYDBHbFnN3uCbufIgXv3hiWgyZzkfPGPOmv2qvSY";
-
+  try { parsedSamples = JSON.parse(sampRaw); } catch { setStatus("error","Invalid JSON in samples field."); return; }
+  btn.disabled = true; setStatus("","Inserting…");
   try {
     const sr  = parseInt(document.getElementById("ins_sr").value)    || 360;
     const dur = parseFloat(document.getElementById("ins_dur").value) || parsedSamples.length / sr;
     const hr  = parseFloat(document.getElementById("ins_hr").value)  || null;
-
-    // Get the session token from localStorage (Supabase stores it here after login)
-    const sbKey = Object.keys(localStorage).find(k => k.startsWith("sb-") && k.endsWith("-auth-token"));
+    const sbKey   = Object.keys(localStorage).find(k => k.startsWith("sb-") && k.endsWith("-auth-token"));
     const session = sbKey ? JSON.parse(localStorage.getItem(sbKey)) : null;
-    const accessToken = session?.access_token || SUPABASE_KEY;
-
-    const payload = {
-      user_id:     user_id,
-      samples:     parsedSamples,
-      sample_rate: sr,
-      heart_rate:  hr,
-      label:       document.getElementById("ins_label").value,
-      duration_sec: dur,
-    };
-
-    console.log("[ECG Insert] user_id:", user_id);
-    console.log("[ECG Insert] accessToken type:", accessToken === SUPABASE_KEY ? "anon key" : "user JWT");
-    console.log("[ECG Insert] payload:", payload);
-
+    const token   = session?.access_token || SUPABASE_KEY;
+    const payload = { user_id, samples: parsedSamples, sample_rate: sr, heart_rate: hr, label: document.getElementById("ins_label").value, duration_sec: dur };
     const res = await fetch(`${SUPABASE_URL}/rest/v1/ecg_data`, {
       method: "POST",
-      headers: {
-        "Content-Type":  "application/json",
-        "apikey":        SUPABASE_KEY,
-        "Authorization": `Bearer ${accessToken}`,
-        "Prefer":        "return=representation",
-      },
+      headers: { "Content-Type":"application/json", "apikey":SUPABASE_KEY, "Authorization":`Bearer ${token}`, "Prefer":"return=representation" },
       body: JSON.stringify(payload),
     });
-
     const rawText = await res.text();
-    console.log("[ECG Insert] HTTP status:", res.status);
-    console.log("[ECG Insert] Response body:", rawText);
-
-    let data;
-    try { data = JSON.parse(rawText); } catch { data = rawText; }
-
-    if (!res.ok) throw new Error(
-      (Array.isArray(data) ? null : data?.message) ||
-      (Array.isArray(data) ? null : data?.hint)    ||
-      (Array.isArray(data) ? null : data?.details) ||
-      (Array.isArray(data) ? null : JSON.stringify(data)) ||
-      `HTTP ${res.status}`
-    );
-
-    setStatus("ok", "✓ Record inserted successfully!");
-    setTimeout(() => {
-      closeInsertModal();
-      loadLatestECG();
-      setStatus("", "");
-    }, 1200);
-
-  } catch (err) {
-    console.error("[ECG Insert] Error:", err);
-    setStatus("error", "Error: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
+    let data; try { data = JSON.parse(rawText); } catch { data = rawText; }
+    if (!res.ok) throw new Error((Array.isArray(data)?null:data?.message)||(Array.isArray(data)?null:data?.hint)||`HTTP ${res.status}`);
+    setStatus("ok","✓ Record inserted successfully!");
+    setTimeout(() => { closeInsertModal(); loadLatestECG(); setStatus("",""); }, 1200);
+  } catch (err) { setStatus("error","Error: "+err.message); } finally { btn.disabled = false; }
 }
 </script>
-
 </body>
 </html>

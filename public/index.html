@@ -1,541 +1,686 @@
-<!DOCTYPE html>
 
-<html class="scroll-smooth" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>HeartGuard | AI-Powered Cardiac Intelligence</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"/>
-<!-- Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "secondary-fixed": "#9cf5c1",
-                    "surface-container-high": "#dce9ff",
-                    "tertiary-fixed-dim": "#ffb95f",
-                    "background": "#f8f9ff",
-                    "secondary-container": "#99f2bf",
-                    "surface-dim": "#cbdbf5",
-                    "surface-tint": "#226b47",
-                    "on-secondary-fixed-variant": "#005232",
-                    "tertiary": "#533200",
-                    "on-primary-fixed": "#002111",
-                    "surface-variant": "#d3e4fe",
-                    "on-tertiary-fixed-variant": "#653e00",
-                    "on-surface-variant": "#404942",
-                    "on-primary-fixed-variant": "#005232",
-                    "on-secondary": "#ffffff",
-                    "outline-variant": "#bfc9c0",
-                    "primary-fixed": "#a9f3c5",
-                    "on-secondary-fixed": "#002111",
-                    "surface-container-highest": "#d3e4fe",
-                    "tertiary-container": "#724700",
-                    "on-tertiary-container": "#ffb451",
-                    "surface-bright": "#f8f9ff",
-                    "primary-container": "#0d5c3a",
-                    "on-secondary-container": "#087148",
-                    "primary-fixed-dim": "#8ed6aa",
-                    "inverse-on-surface": "#eaf1ff",
-                    "surface-container": "#e5eeff",
-                    "surface-container-low": "#eff4ff",
-                    "on-surface": "#0b1c30",
-                    "error-container": "#ffdad6",
-                    "on-primary-container": "#8ad2a7",
-                    "surface-container-lowest": "#ffffff",
-                    "surface": "#f8f9ff",
-                    "on-error": "#ffffff",
-                    "tertiary-fixed": "#ffddb8",
-                    "secondary": "#006d44",
-                    "on-background": "#0b1c30",
-                    "outline": "#707971",
-                    "inverse-primary": "#8ed6aa",
-                    "on-primary": "#ffffff",
-                    "on-error-container": "#93000a",
-                    "primary": "#004328",
-                    "error": "#ba1a1a",
-                    "inverse-surface": "#213145",
-                    "on-tertiary-fixed": "#2a1700",
-                    "on-tertiary": "#ffffff",
-                    "secondary-fixed-dim": "#80d8a7"
-            },
-            "fontFamily": {
-                    "headline": ["Fraunces", "serif"],
-                    "body": ["DM Sans", "sans-serif"],
-                    "label": ["DM Sans", "sans-serif"]
-            }
-          },
-        },
-      }
-    </script>
 <style>
-      .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      }
-      .font-serif { font-family: 'Fraunces', serif; }
-      .font-sans { font-family: 'DM Sans', sans-serif; }
-      .glass-nav {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-      .ghost-border {
-        border: 1px solid rgba(22, 163, 74, 0.18);
-      }
-      .primary-gradient {
-        background: linear-gradient(135deg, #004328 0%, #0d5c3a 100%);
-      }
-      .hero-gradient {
-        background: linear-gradient(180deg, #eff4ff 0%, #f8f9ff 100%);
-      }
-    </style>
-</head>
-<body class="bg-surface font-sans text-on-surface selection:bg-secondary-fixed">
-<!-- TopNavBar -->
-<nav class="fixed top-0 w-full z-50 glass-nav shadow-sm">
-<div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
-<div class="text-2xl font-serif font-black text-primary flex items-center gap-2">
-<span class="text-3xl">🫀</span>
-<span>HeartGuard</span>
-</div>
-<div class="hidden md:flex items-center space-x-8 font-sans font-medium">
-<a class="text-on-surface/70 hover:text-on-surface transition-colors" href="#how-it-works">How It Works</a>
-<a class="text-on-surface/70 hover:text-on-surface transition-colors" href="#features">Features</a>
-<a class="text-on-surface/70 hover:text-on-surface transition-colors" href="#parameters">Parameters</a>
-<a class="text-on-surface/70 hover:text-on-surface transition-colors" href="#reviews">Reviews</a>
-</div>
-<div class="flex items-center gap-4">
-<a href="login.html" class="text-primary font-semibold px-4 py-2 hover:opacity-80 transition-opacity cursor-pointer">Sign In</a>
-<a href="register.html" class="bg-primary text-on-primary font-bold px-6 py-2.5 rounded-full primary-gradient hover:shadow-lg hover:scale-105 transition-all duration-300 inline-block">
-                    Get Started
-                </a>
-</div>
-</div>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:wght@400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --g1:#003a22;--g2:#004328;--g3:#0d5c3a;--g4:#006d44;
+  --mint:#a9f3c5;--mint2:#8ed6aa;--mint3:#99f2bf;
+  --bg:#f0f7f4;--bg2:#e5f0eb;--bg3:#ffffff;
+  --text:#0b1c30;--muted:#3d5246;
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;}
+
+/* ── CUSTOM CURSOR ── */
+#cur-outer{position:fixed;width:36px;height:36px;border:2px solid var(--g4);border-radius:50%;pointer-events:none;z-index:9999;transition:transform .15s,border-color .2s,width .2s,height .2s;}
+#cur-inner{position:fixed;width:7px;height:7px;background:var(--g3);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+body.hovered #cur-outer{width:56px;height:56px;border-color:var(--mint);background:rgba(0,109,68,.07);}
+
+/* ── CANVAS PARTICLE BG ── */
+#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.35;}
+
+/* ── NAV ── */
+nav{position:relative;z-index:50;background:rgba(0,43,26,.92);backdrop-filter:blur(20px);padding:18px 48px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(169,243,197,.1);}
+.logo{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--mint);display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;position:relative;display:flex;align-items:center;justify-content:center;}
+.logo-icon svg{animation:heartbeat 1.3s ease-in-out infinite;}
+@keyframes heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.35);}28%{transform:scale(1);}42%{transform:scale(1.18);}70%{transform:scale(1);}}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{text-decoration:none;color:rgba(169,243,197,.6);font-weight:500;font-size:15px;transition:color .25s;position:relative;padding-bottom:4px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--mint);transition:width .35s cubic-bezier(.4,0,.2,1);}
+.nav-links a:hover{color:var(--mint);}
+.nav-links a:hover::after{width:100%;}
+.btn-nav{background:var(--g4);color:var(--mint);padding:11px 28px;border-radius:999px;font-weight:700;font-size:14px;border:none;cursor:none;letter-spacing:.04em;position:relative;overflow:hidden;transition:transform .2s;}
+.btn-nav::before{content:'';position:absolute;inset:0;background:var(--mint);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+.btn-nav:hover{transform:scale(1.04);}
+.btn-nav:hover::before{transform:scaleX(1);}
+.btn-nav span{position:relative;z-index:1;transition:color .4s;}
+.btn-nav:hover span{color:var(--g1);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;padding:120px 60px 80px;position:relative;overflow:hidden;background:var(--g1);}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(13,92,58,.5) 0%,transparent 70%);pointer-events:none;animation:heroBg 8s ease-in-out infinite alternate;}
+@keyframes heroBg{from{opacity:.5;}to{opacity:1;}}
+
+.hero-left{position:relative;z-index:2;}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;padding:8px 22px;background:rgba(169,243,197,.12);border:1px solid rgba(169,243,197,.25);color:var(--mint);font-weight:700;font-size:13px;border-radius:999px;margin-bottom:36px;letter-spacing:.05em;
+  animation:slideDown .7s ease both;overflow:hidden;position:relative;}
+.hero-badge::before{content:'';position:absolute;left:-100%;top:0;bottom:0;width:60%;background:rgba(169,243,197,.15);animation:sheen 3s 1.5s ease-in-out infinite;}
+@keyframes sheen{0%{left:-100%;}100%{left:200%;}}
+.badge-dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:badgeDot 1.5s ease-in-out infinite;}
+@keyframes badgeDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(0.6);}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:translateY(0);}}
+
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(44px,4.5vw,72px);font-weight:900;line-height:1.05;color:var(--mint);margin-bottom:28px;animation:heroTitle .9s .2s ease both;}
+.hero h1 em{font-style:italic;font-weight:300;color:rgba(169,243,197,.6);display:block;}
+@keyframes heroTitle{from{opacity:0;transform:translateY(40px) skewY(2deg);}to{opacity:1;transform:none;}}
+.hero-sub{font-size:17px;color:rgba(169,243,197,.5);max-width:460px;line-height:1.75;margin-bottom:44px;animation:heroTitle .9s .4s ease both;}
+.hero-ctas{display:flex;gap:18px;align-items:center;animation:heroTitle .9s .6s ease both;}
+.btn-hero{background:var(--mint);color:var(--g1);padding:15px 36px;border-radius:999px;font-weight:900;font-size:15px;border:none;cursor:none;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.btn-hero::after{content:'';position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .3s;}
+.btn-hero:hover{transform:scale(1.06);box-shadow:0 12px 40px rgba(169,243,197,.35);}
+.btn-hero:hover::after{opacity:.1;}
+.btn-hero-ghost{padding:15px 36px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(169,243,197,.3);color:var(--mint);background:transparent;cursor:none;transition:border-color .3s,background .3s;}
+.btn-hero-ghost:hover{border-color:var(--mint);background:rgba(169,243,197,.08);}
+
+/* ── HERO RIGHT: LIVE CARD ── */
+.hero-right{position:relative;z-index:2;display:flex;justify-content:center;animation:heroCard 1s .4s ease both;}
+@keyframes heroCard{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:none;}}
+.live-card{background:rgba(255,255,255,.04);border:1px solid rgba(169,243,197,.15);border-radius:32px;padding:32px;width:360px;backdrop-filter:blur(20px);}
+.ecg-wrap{background:rgba(0,0,0,.2);border-radius:16px;height:120px;margin-bottom:24px;overflow:hidden;position:relative;}
+#ecgCanvas{width:100%;height:100%;}
+.stats4{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.scard{background:rgba(169,243,197,.07);border:1px solid rgba(169,243,197,.12);border-radius:14px;padding:14px;}
+.scard-num{font-family:'Fraunces',serif;font-size:26px;font-weight:800;color:var(--mint);display:block;}
+.scard-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(169,243,197,.45);}
+
+/* floating orbs in hero */
+.orb{position:absolute;border-radius:50%;pointer-events:none;}
+.orb1{width:520px;height:520px;background:rgba(13,92,58,.4);top:-120px;right:-80px;animation:orbFloat 9s ease-in-out infinite;}
+.orb2{width:280px;height:280px;background:rgba(0,67,40,.5);bottom:-60px;left:5%;animation:orbFloat 12s 2s ease-in-out infinite reverse;}
+.orb3{width:100px;height:100px;background:rgba(169,243,197,.06);top:40%;right:30%;animation:orbFloat 6s 1s ease-in-out infinite;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(-18px,22px) scale(1.05);}66%{transform:translate(12px,-14px) scale(.95);}}
+
+/* ── TICKER ── */
+.ticker-wrap{background:var(--g3);overflow:hidden;padding:13px 0;border-top:1px solid rgba(169,243,197,.1);border-bottom:1px solid rgba(169,243,197,.1);position:relative;z-index:10;}
+.ticker-inner{display:flex;white-space:nowrap;animation:scroll 22s linear infinite;}
+.tick-item{display:inline-flex;align-items:center;gap:8px;padding:0 36px;font-size:13px;font-weight:700;letter-spacing:.07em;color:var(--mint);text-transform:uppercase;}
+.tick-sep{display:inline-block;width:5px;height:5px;background:rgba(169,243,197,.4);border-radius:50%;}
+
+/* ── SECTION BASE ── */
+.section{padding:100px 60px;position:relative;z-index:1;}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g4);margin-bottom:16px;}
+.sec-title{font-family:'Fraunces',serif;font-size:clamp(34px,3.5vw,52px);font-weight:800;color:var(--g1);line-height:1.15;margin-bottom:18px;}
+.sec-sub{color:var(--muted);font-size:16px;line-height:1.7;max-width:560px;}
+
+/* ── STEPS ── */
+.steps-sec{background:#fff;}
+.steps-header{text-align:center;margin-bottom:72px;}
+.steps-header .sec-sub{margin:0 auto;}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--bg2);}
+.step{background:#fff;padding:40px 28px;position:relative;overflow:hidden;transition:background .3s;}
+.step::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--g3);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.step:hover{background:var(--bg);}
+.step:hover::before{transform:scaleX(1);}
+.step-n{font-family:'Fraunces',serif;font-size:56px;font-weight:900;color:rgba(0,67,40,.06);line-height:1;margin-bottom:20px;transition:color .3s;}
+.step:hover .step-n{color:rgba(0,67,40,.12);}
+.step-icon-box{width:52px;height:52px;border-radius:14px;background:var(--bg2);display:flex;align-items:center;justify-content:center;margin-bottom:20px;transition:background .3s,transform .35s;}
+.step:hover .step-icon-box{background:var(--g3);transform:rotate(-8deg) scale(1.1);}
+.step-icon-box svg{transition:stroke .3s;}
+.step:hover .step-icon-box svg{stroke:#fff;}
+.step h3{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:var(--g1);margin-bottom:10px;}
+.step p{font-size:14px;color:var(--muted);line-height:1.65;}
+
+/* ── FEATURES ── */
+.features-sec{background:var(--bg);}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.feat-items{display:flex;flex-direction:column;gap:0;}
+.feat-item{display:flex;gap:22px;padding:28px 0;border-bottom:1px solid rgba(0,67,40,.08);position:relative;overflow:hidden;}
+.feat-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--g3);transform:scaleY(0);transform-origin:bottom;transition:transform .4s;}
+.feat-item.vis::before{transform:scaleY(1);}
+.feat-ico{width:52px;height:52px;background:var(--g2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transform:scale(0);transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
+.feat-item.vis .feat-ico{transform:scale(1);}
+.feat-ico svg{stroke:var(--mint);stroke-width:1.8;fill:none;}
+.feat-txt h4{font-weight:700;color:var(--g1);font-size:16px;margin-bottom:6px;}
+.feat-txt p{font-size:14px;color:var(--muted);line-height:1.65;}
+.feat-txt{opacity:0;transform:translateX(20px);transition:opacity .5s,transform .5s;}
+.feat-item.vis .feat-txt{opacity:1;transform:none;}
+
+.stat-cards{display:flex;flex-direction:column;gap:16px;}
+.stat-card{background:#fff;border-radius:22px;padding:20px 24px;border:1px solid rgba(0,67,40,.08);display:flex;justify-content:space-between;align-items:center;transform:translateX(60px);opacity:0;transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .6s,box-shadow .3s;}
+.stat-card.vis{transform:none;opacity:1;}
+.stat-card:hover{box-shadow:0 8px 32px rgba(0,67,40,.12);}
+.stat-card:nth-child(2){margin-left:28px;}
+.sc-left{display:flex;align-items:center;gap:16px;}
+.sc-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.sc-ico svg{stroke-width:1.8;fill:none;}
+.sc-name{font-weight:700;color:var(--g1);font-size:15px;}
+.sc-sub{font-size:12px;color:var(--muted);}
+.sc-right{text-align:right;}
+.sc-pct{font-family:'Fraunces',serif;font-size:24px;font-weight:800;}
+.bar{width:100px;height:5px;background:var(--bg2);border-radius:999px;margin-top:6px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+
+/* ── PARAMETERS ── */
+.params-sec{background:var(--g1);padding:100px 60px;position:relative;overflow:hidden;}
+.params-sec .sec-label{color:var(--mint2);}
+.params-sec .sec-title{color:var(--mint);}
+.params-sec .sec-sub{color:rgba(169,243,197,.45);}
+.grid-bg{position:absolute;inset:0;pointer-events:none;opacity:.05;}
+.pills-wrap{display:flex;flex-wrap:wrap;gap:12px;margin-top:52px;}
+.pill{padding:10px 24px;background:rgba(169,243,197,.07);border:1px solid rgba(169,243,197,.14);border-radius:999px;font-size:14px;font-weight:500;color:var(--mint2);cursor:none;opacity:0;transform:translateY(16px) scale(.92);transition:background .25s,transform .25s,border-color .25s,color .25s;letter-spacing:.01em;}
+.pill.popin{animation:pillpop .4s ease forwards;}
+@keyframes pillpop{to{opacity:1;transform:none;}}
+.pill:hover{background:rgba(169,243,197,.2);border-color:rgba(169,243,197,.4);color:var(--mint);transform:scale(1.07);}
+.params-deco{position:absolute;right:-40px;bottom:-40px;width:380px;height:380px;border:60px solid rgba(169,243,197,.04);border-radius:50%;animation:spinSlow 30s linear infinite;}
+.params-deco2{position:absolute;right:80px;bottom:80px;width:200px;height:200px;border:30px solid rgba(169,243,197,.06);border-radius:50%;animation:spinSlow 20s linear infinite reverse;}
+@keyframes spinSlow{to{transform:rotate(360deg);}}
+
+/* ── COUNTER SECTION ── */
+.counters-sec{background:#fff;padding:80px 60px;}
+.counters-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--bg2);}
+.count-card{background:#fff;padding:48px 32px;text-align:center;position:relative;overflow:hidden;}
+.count-card::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) scaleX(0);width:60%;height:2px;background:var(--g3);transition:transform .6s;}
+.count-card.vis::after{transform:translateX(-50%) scaleX(1);}
+.count-num{font-family:'Fraunces',serif;font-size:56px;font-weight:900;color:var(--g1);display:block;line-height:1;}
+.count-unit{font-family:'Fraunces',serif;font-size:32px;font-weight:300;color:var(--g4);}
+.count-lbl{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:12px;}
+
+/* ── REVIEWS ── */
+.reviews-sec{background:var(--bg);padding:100px 60px;}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;}
+.review{border-radius:28px;padding:36px;transition:transform .35s,box-shadow .35s;}
+.review:hover{transform:translateY(-10px);box-shadow:0 24px 64px rgba(0,67,40,.14);}
+.review.dark{background:var(--g1);color:var(--mint);margin-top:-28px;}
+.review.light{background:#fff;}
+.stars{display:flex;gap:4px;margin-bottom:20px;}
+.star{width:16px;height:16px;background:var(--g3);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
+.review.dark .star{background:var(--mint);}
+.review-text{font-style:italic;font-size:15px;line-height:1.75;margin-bottom:28px;color:inherit;opacity:.85;}
+.review.light .review-text{color:var(--muted);}
+.reviewer-row{display:flex;align-items:center;gap:14px;}
+.avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;}
+.rev-name{font-weight:700;font-size:14px;}
+.rev-role{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;opacity:.5;}
+
+/* ── CTA ── */
+.cta-sec{background:var(--g1);padding:80px 60px;}
+.cta-box{border:1px solid rgba(169,243,197,.12);border-radius:40px;padding:90px 80px;text-align:center;position:relative;overflow:hidden;}
+.cta-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 30% 50%,rgba(13,92,58,.6) 0%,transparent 70%);animation:ctaGlow 6s ease-in-out infinite alternate;}
+@keyframes ctaGlow{from{opacity:.5;}to{opacity:1;}}
+.cta-box h2{font-family:'Fraunces',serif;font-size:clamp(36px,4vw,60px);font-weight:900;color:var(--mint);margin-bottom:16px;position:relative;z-index:1;line-height:1.15;}
+.cta-box p{color:rgba(169,243,197,.45);font-size:15px;margin-bottom:44px;position:relative;z-index:1;}
+.cta-btns{display:flex;gap:18px;justify-content:center;position:relative;z-index:1;}
+.btn-cta-p{background:var(--mint);color:var(--g1);padding:16px 40px;border-radius:999px;font-weight:900;font-size:15px;border:none;cursor:none;transition:transform .2s,box-shadow .2s;}
+.btn-cta-p:hover{transform:scale(1.06);box-shadow:0 14px 44px rgba(169,243,197,.3);}
+.btn-cta-s{background:transparent;color:var(--mint);padding:16px 40px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(169,243,197,.3);cursor:none;transition:background .3s,border-color .3s;}
+.btn-cta-s:hover{background:rgba(169,243,197,.08);border-color:rgba(169,243,197,.5);}
+.cta-rings{position:absolute;inset:0;pointer-events:none;}
+.ring{position:absolute;border:1px solid rgba(169,243,197,.05);border-radius:50%;animation:ringPulse 4s ease-in-out infinite;}
+.r1{width:300px;height:300px;top:-80px;right:-60px;animation-delay:0s;}
+.r2{width:500px;height:500px;top:-160px;right:-140px;animation-delay:.7s;}
+.r3{width:200px;height:200px;bottom:-60px;left:-40px;animation-delay:1.4s;}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.5;}50%{transform:scale(1.05);opacity:1;}}
+
+/* ── FOOTER ── */
+footer{background:var(--g2);padding:60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:32px;position:relative;z-index:1;}
+.foot-logo{font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:var(--mint);}
+.foot-copy{color:rgba(169,243,197,.3);font-size:13px;margin-top:8px;max-width:320px;line-height:1.6;}
+.foot-nav{display:flex;gap:32px;}
+.foot-nav a{color:rgba(169,243,197,.45);font-size:14px;text-decoration:none;transition:color .2s;}
+.foot-nav a:hover{color:var(--mint);}
+
+/* ── REVEAL UTIL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s;}
+.reveal.vis{opacity:1;transform:none;}
+
+/* ── SCROLL PROGRESS BAR ── */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--mint);z-index:9998;width:0%;transition:width .1s linear;}
+
+/* ── ANIMATED GRID BG (canvas) ── */
+#grid-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.04;}
+</style>
+
+<div id="cur-outer"></div>
+<div id="cur-inner"></div>
+<div id="progress-bar"></div>
+<canvas id="grid-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 24s-10-6.5-10-13a6 6 0 0112 0 6 6 0 0112 0c0 6.5-10 13-10 13z" fill="#a9f3c5" stroke="#a9f3c5" stroke-width="1"/>
+      </svg>
+    </div>
+    HeartGuard
+  </div>
+  <ul class="nav-links">
+    <li><a href="#steps">How It Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#params">Parameters</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+  </ul>
+  <button class="btn-nav"><span>Get Started Free</span></button>
 </nav>
-<main class="pt-24">
-<!-- Hero Section -->
-<section class="hero-gradient px-8 py-20 md:py-32 overflow-hidden">
-<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-<div class="relative z-10">
-<span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary-container text-on-secondary-fixed-variant font-bold text-sm mb-8">
-                        🫎 AI-Powered Cardiac Intelligence
-                    </span>
-<h1 class="text-5xl md:text-7xl font-serif font-black text-primary leading-tight mb-8">
-                        Predict Heart Disease <br/>
-<span class="italic text-secondary font-thin">Before It Strikes</span>
-</h1>
-<p class="text-lg md:text-xl text-on-surface-variant max-w-xl mb-10 leading-relaxed">
-                        Harness the power of clinically-validated machine learning to analyze vital cardiac signals in real-time. Proactive intelligence for a longer life.
-                    </p>
-<div class="flex flex-wrap gap-6 items-center">
-<a href="register.html" class="bg-primary text-on-primary font-bold px-8 py-4 rounded-[20px] primary-gradient hover:scale-105 transition-all shadow-md inline-block">
-                            Start Free Assessment
-                        </a>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
-<span class="text-sm font-bold text-primary italic">Trusted by 5,000+ Physicians</span>
-</div>
-</div>
-</div>
-<div class="relative">
-<div class="bg-surface-container-lowest rounded-[40px] p-8 shadow-2xl relative z-10 ghost-border">
-<img alt="Dashboard Preview" class="w-full h-[400px] object-cover rounded-[32px] mb-8" data-alt="close-up of high-tech medical dashboard displaying complex cardiac data and heart rhythm graphs on a sleek glass tablet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT0jWHrTnT4JZ5nMWL-5cjwQN4LHr-1mXicpWFDhgNzMXBxQsK3k9JqnZiO293jhikLvSCuZ-1knCpd4wgJsmFSnNtuPWDTn_Va1Z5wrKEmcPsnzrl_dxfWMoTL-1jXmBp55HlTSTOtf-ndErbXTv4ge40PW9FtPEdg4t18aV0XeYjrmjf6Vfm3JMRIKeJvzcmZEif3zsx9H8sWZbKqOWa033ph6zuCZMKnjQYMoQYQQszMAHw8lNxeD2NVoBSvtOyuD8RJTFIo5o"/>
-<div class="grid grid-cols-2 gap-6">
-<div class="p-4 bg-surface-container rounded-2xl">
-<span class="block text-primary text-3xl font-serif font-bold">92.4%</span>
-<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">AI Accuracy</span>
-</div>
-<div class="p-4 bg-surface-container rounded-2xl">
-<span class="block text-primary text-3xl font-serif font-bold">16</span>
-<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Parameters Analyzed</span>
-</div>
-<div class="p-4 bg-surface-container rounded-2xl">
-<span class="block text-primary text-3xl font-serif font-bold">&lt;3s</span>
-<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Processing Time</span>
-</div>
-<div class="p-4 bg-surface-container rounded-2xl">
-<span class="block text-primary text-3xl font-serif font-bold">50k+</span>
-<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Validated Records</span>
-</div>
-</div>
-</div>
-<!-- Decorative Element -->
-<div class="absolute -top-10 -right-10 w-64 h-64 bg-secondary-fixed opacity-20 blur-3xl rounded-full"></div>
-<div class="absolute -bottom-10 -left-10 w-64 h-64 bg-surface-tint opacity-10 blur-3xl rounded-full"></div>
-</div>
-</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-left">
+    <div class="hero-badge"><span class="badge-dot"></span>AI-Powered Cardiac Intelligence</div>
+    <h1>Predict Heart Disease<em>Before It Strikes</em></h1>
+    <p class="hero-sub">Harness clinically-validated machine learning to analyze vital cardiac signals in real time. Proactive intelligence for a longer life.</p>
+    <div class="hero-ctas">
+      <button class="btn-hero">Start Free Assessment</button>
+      <button class="btn-hero-ghost">View Live Demo</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="live-card">
+      <div class="ecg-wrap"><canvas id="ecgCanvas"></canvas></div>
+      <div class="stats4">
+        <div class="scard"><span class="scard-num" id="acc">0</span><span class="scard-lbl">% AI Accuracy</span></div>
+        <div class="scard"><span class="scard-num" id="params-n">0</span><span class="scard-lbl">Parameters</span></div>
+        <div class="scard"><span class="scard-num">&lt; 3s</span><span class="scard-lbl">Processing</span></div>
+        <div class="scard"><span class="scard-num" id="rec">0</span><span class="scard-lbl">k+ Records</span></div>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- How It Works -->
-<section class="py-24 px-8 bg-surface-container-lowest" id="how-it-works">
-<div class="max-w-7xl mx-auto">
-<div class="text-center mb-20">
-<h2 class="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">Precision Intelligence Simplified</h2>
-<p class="text-on-surface-variant font-medium">Your journey to cardiovascular clarity in four intentional steps.</p>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tick">
+    <span class="tick-item">Cardiac AI <span class="tick-sep"></span></span>
+    <span class="tick-item">92.4% Accuracy <span class="tick-sep"></span></span>
+    <span class="tick-item">16 Parameters <span class="tick-sep"></span>
+    <span class="tick-item">HIPAA Compliant <span class="tick-sep"></span></span>
+    <span class="tick-item">Real-Time Analysis <span class="tick-sep"></span></span>
+    <span class="tick-item">50k+ Records <span class="tick-sep"></span></span>
+    <span class="tick-item">Physician Trusted <span class="tick-sep"></span></span>
+    <span class="tick-item">Cardiac AI <span class="tick-sep"></span></span>
+    <span class="tick-item">92.4% Accuracy <span class="tick-sep"></span></span>
+    <span class="tick-item">16 Parameters <span class="tick-sep"></span></span>
+    <span class="tick-item">HIPAA Compliant <span class="tick-sep"></span></span>
+    <span class="tick-item">Real-Time Analysis <span class="tick-sep"></span></span>
+    <span class="tick-item">50k+ Records <span class="tick-sep"></span></span>
+    <span class="tick-item">Physician Trusted <span class="tick-sep"></span></span>
+  </div>
 </div>
-<div class="grid md:grid-cols-4 gap-8">
-<!-- Step 1 -->
-<div class="relative group">
-<div class="mb-6 flex justify-center">
-<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary relative">
-<span class="material-symbols-outlined text-3xl">list_alt</span>
-<span class="absolute -top-2 -right-2 w-8 h-8 rounded-full primary-gradient text-white flex items-center justify-center text-sm font-bold">01</span>
-</div>
-</div>
-<h3 class="text-xl font-serif font-bold text-center mb-3">Enter Your Vitals</h3>
-<p class="text-center text-on-surface-variant text-sm leading-relaxed">Input core health metrics including BP, cholesterol, and family history securely.</p>
-</div>
-<!-- Step 2 -->
-<div class="relative group">
-<div class="mb-6 flex justify-center">
-<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary relative">
-<span class="material-symbols-outlined text-3xl">smart_toy</span>
-<span class="absolute -top-2 -right-2 w-8 h-8 rounded-full primary-gradient text-white flex items-center justify-center text-sm font-bold">02</span>
-</div>
-</div>
-<h3 class="text-xl font-serif font-bold text-center mb-3">AI Analysis</h3>
-<p class="text-center text-on-surface-variant text-sm leading-relaxed">Our clinical-grade neural network correlates 16 data points against thousands of cases.</p>
-</div>
-<!-- Step 3 -->
-<div class="relative group">
-<div class="mb-6 flex justify-center">
-<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary relative">
-<span class="material-symbols-outlined text-3xl">analytics</span>
-<span class="absolute -top-2 -right-2 w-8 h-8 rounded-full primary-gradient text-white flex items-center justify-center text-sm font-bold">03</span>
-</div>
-</div>
-<h3 class="text-xl font-serif font-bold text-center mb-3">Get Your Risk Score</h3>
-<p class="text-center text-on-surface-variant text-sm leading-relaxed">Receive a clear, actionable cardiovascular risk profile and preventative roadmap.</p>
-</div>
-<!-- Step 4 -->
-<div class="relative group">
-<div class="mb-6 flex justify-center">
-<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary relative">
-<span class="material-symbols-outlined text-3xl">timeline</span>
-<span class="absolute -top-2 -right-2 w-8 h-8 rounded-full primary-gradient text-white flex items-center justify-center text-sm font-bold">04</span>
-</div>
-</div>
-<h3 class="text-xl font-serif font-bold text-center mb-3">Track Over Time</h3>
-<p class="text-center text-on-surface-variant text-sm leading-relaxed">Monitor changes and optimize your heart health through periodic assessments.</p>
-</div>
-</div>
-</div>
+
+<!-- STEPS -->
+<section class="section steps-sec" id="steps">
+  <div class="steps-header">
+    <div class="sec-label reveal">Process</div>
+    <h2 class="sec-title reveal">Precision intelligence simplified</h2>
+    <p class="sec-sub reveal">Your journey to cardiovascular clarity in four intentional steps.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step reveal">
+      <div class="step-n">01</div>
+      <div class="step-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" stroke="var(--g3)" fill="none" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      </div>
+      <h3>Enter your vitals</h3>
+      <p>Input core health metrics including BP, cholesterol, and family history securely.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:.1s">
+      <div class="step-n">02</div>
+      <div class="step-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" stroke="var(--g3)" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </div>
+      <h3>AI analysis</h3>
+      <p>Our clinical-grade neural network correlates 16 data points against thousands of cases.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:.2s">
+      <div class="step-n">03</div>
+      <div class="step-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" stroke="var(--g3)" fill="none" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3>Get your risk score</h3>
+      <p>Receive a clear, actionable cardiovascular risk profile and preventative roadmap.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:.3s">
+      <div class="step-n">04</div>
+      <div class="step-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" stroke="var(--g3)" fill="none" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <h3>Track over time</h3>
+      <p>Monitor changes and optimize your heart health through periodic assessments.</p>
+    </div>
+  </div>
 </section>
-<!-- Features Section -->
-<section class="py-24 px-8" id="features">
-<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center">
-<div class="order-2 md:order-1">
-<div class="space-y-6">
-<!-- Stat Card 1 -->
-<div class="bg-surface-container-lowest p-6 rounded-[24px] shadow-xl ghost-border flex items-center justify-between">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary">bloodtype</span>
-</div>
-<div>
-<span class="block font-bold text-primary">Blood Pressure</span>
-<span class="text-sm text-on-surface-variant">Stable Range</span>
-</div>
-</div>
-<div class="text-right">
-<span class="text-2xl font-serif font-bold text-secondary">72%</span>
-<div class="w-24 h-1.5 bg-surface-container rounded-full mt-1">
-<div class="bg-secondary h-full rounded-full w-[72%]"></div>
-</div>
-</div>
-</div>
-<!-- Stat Card 2 -->
-<div class="bg-surface-container-lowest p-6 rounded-[24px] shadow-xl ghost-border flex items-center justify-between md:ml-8">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-<span class="material-symbols-outlined text-amber-600">monitor_heart</span>
-</div>
-<div>
-<span class="block font-bold text-primary">Cholesterol</span>
-<span class="text-sm text-on-surface-variant">Action Required</span>
-</div>
-</div>
-<div class="text-right">
-<span class="text-2xl font-serif font-bold text-amber-600">55%</span>
-<div class="w-24 h-1.5 bg-surface-container rounded-full mt-1">
-<div class="bg-amber-600 h-full rounded-full w-[55%]"></div>
-</div>
-</div>
-</div>
-<!-- Stat Card 3 -->
-<div class="bg-surface-container-lowest p-6 rounded-[24px] shadow-xl ghost-border flex items-center justify-between">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
-<span class="material-symbols-outlined text-emerald-600">fitness_center</span>
-</div>
-<div>
-<span class="block font-bold text-primary">Vascular Health</span>
-<span class="text-sm text-on-surface-variant">Optimal</span>
-</div>
-</div>
-<div class="text-right">
-<span class="text-2xl font-serif font-bold text-emerald-600">89%</span>
-<div class="w-24 h-1.5 bg-surface-container rounded-full mt-1">
-<div class="bg-emerald-600 h-full rounded-full w-[89%]"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="order-1 md:order-2">
-<h2 class="text-4xl md:text-5xl font-serif font-bold text-primary mb-12">The Sentinel at Your Side</h2>
-<div class="grid gap-8">
-<div class="flex gap-6">
-<div class="flex-shrink-0 w-12 h-12 rounded-xl primary-gradient text-white flex items-center justify-center">
-<span class="material-symbols-outlined">verified</span>
-</div>
-<div>
-<h4 class="text-lg font-bold text-primary mb-1">Clinically-Validated ML</h4>
-<p class="text-on-surface-variant">Built on extensive peer-reviewed data sets and clinical trials for maximum reliability.</p>
-</div>
-</div>
-<div class="flex gap-6">
-<div class="flex-shrink-0 w-12 h-12 rounded-xl primary-gradient text-white flex items-center justify-center">
-<span class="material-symbols-outlined">shield_lock</span>
-</div>
-<div>
-<h4 class="text-lg font-bold text-primary mb-1">Private &amp; Secure</h4>
-<p class="text-on-surface-variant">End-to-end encryption for your health data. HIPAA-compliant architectural standards.</p>
-</div>
-</div>
-<div class="flex gap-6">
-<div class="flex-shrink-0 w-12 h-12 rounded-xl primary-gradient text-white flex items-center justify-center">
-<span class="material-symbols-outlined">devices</span>
-</div>
-<div>
-<h4 class="text-lg font-bold text-primary mb-1">Works Anywhere</h4>
-<p class="text-on-surface-variant">Access your heart intelligence from your smartphone, tablet, or desktop seamlessly.</p>
-</div>
-</div>
-<div class="flex gap-6">
-<div class="flex-shrink-0 w-12 h-12 rounded-xl primary-gradient text-white flex items-center justify-center">
-<span class="material-symbols-outlined">summarize</span>
-</div>
-<div>
-<h4 class="text-lg font-bold text-primary mb-1">Detailed Reports</h4>
-<p class="text-on-surface-variant">Download physician-ready PDFs summarizing your analysis for your next checkup.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<!-- FEATURES -->
+<section class="section features-sec" id="features">
+  <div class="feat-grid">
+    <div>
+      <div class="sec-label reveal">Features</div>
+      <h2 class="sec-title reveal">The sentinel at your side</h2>
+      <div class="feat-items">
+        <div class="feat-item" id="fi0">
+          <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div class="feat-txt"><h4>Clinically-validated ML</h4><p>Built on extensive peer-reviewed data sets and clinical trials for maximum reliability.</p></div>
+        </div>
+        <div class="feat-item" id="fi1">
+          <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <div class="feat-txt"><h4>Private and secure</h4><p>End-to-end encryption for your health data. HIPAA-compliant architectural standards.</p></div>
+        </div>
+        <div class="feat-item" id="fi2">
+          <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <div class="feat-txt"><h4>Works anywhere</h4><p>Access your heart intelligence from your smartphone, tablet, or desktop seamlessly.</p></div>
+        </div>
+        <div class="feat-item" id="fi3">
+          <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+          <div class="feat-txt"><h4>Detailed reports</h4><p>Download physician-ready PDFs summarizing your analysis for your next checkup.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-cards">
+      <div class="stat-card" id="sc0">
+        <div class="sc-left">
+          <div class="sc-ico" style="background:#dcfce7;"><svg width="20" height="20" viewBox="0 0 24 24" stroke="#16a34a"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+          <div><div class="sc-name">Blood pressure</div><div class="sc-sub">Stable range</div></div>
+        </div>
+        <div class="sc-right">
+          <div class="sc-pct" style="color:#16a34a;">72%</div>
+          <div class="bar"><div class="bar-fill" style="background:#16a34a;" data-w="72"></div></div>
+        </div>
+      </div>
+      <div class="stat-card" id="sc1">
+        <div class="sc-left">
+          <div class="sc-ico" style="background:#fef3c7;"><svg width="20" height="20" viewBox="0 0 24 24" stroke="#d97706"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div><div class="sc-name">Cholesterol</div><div class="sc-sub">Action required</div></div>
+        </div>
+        <div class="sc-right">
+          <div class="sc-pct" style="color:#d97706;">55%</div>
+          <div class="bar"><div class="bar-fill" style="background:#d97706;" data-w="55"></div></div>
+        </div>
+      </div>
+      <div class="stat-card" id="sc2">
+        <div class="sc-left">
+          <div class="sc-ico" style="background:#d1fae5;"><svg width="20" height="20" viewBox="0 0 24 24" stroke="#059669"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div><div class="sc-name">Vascular health</div><div class="sc-sub">Optimal</div></div>
+        </div>
+        <div class="sc-right">
+          <div class="sc-pct" style="color:#059669;">89%</div>
+          <div class="bar"><div class="bar-fill" style="background:#059669;" data-w="89"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- Parameters Section -->
-<section class="py-24 px-8 bg-primary-container text-white overflow-hidden relative" id="parameters">
-<div class="max-w-7xl mx-auto relative z-10">
-<div class="mb-16">
-<h2 class="text-4xl md:text-5xl font-serif font-bold mb-6">Multi-Dimensional Analysis</h2>
-<p class="text-primary-fixed max-w-2xl text-lg">Our AI doesn't just look at one number. It synthesizes 16 specific medical parameters to build your unique cardiac fingerprint.</p>
-</div>
-<div class="flex flex-wrap gap-4">
-<!-- Pills -->
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🎂 <span>Age</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🩸 <span>Blood Pressure</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🫀 <span>Cholesterol</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🚬 <span>Smoking Status</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🍎 <span>BMI Index</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🧬 <span>Genetics</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🏃 <span>Activity Level</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🍬 <span>Glucose Levels</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🍷 <span>Alcohol Consumption</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🚻 <span>Gender</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        😴 <span>Sleep Quality</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🧘 <span>Stress Factors</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🥦 <span>Dietary Habits</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        💊 <span>Current Meds</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🏔️ <span>Heart Rate</span>
-</div>
-<div class="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 font-medium flex items-center gap-2 hover:bg-white/20 transition-all cursor-default">
-                        🕰️ <span>Age of Diagnosis</span>
-</div>
-</div>
-</div>
-<!-- Background Decoration -->
-<div class="absolute right-0 bottom-0 opacity-10 pointer-events-none">
-<span class="material-symbols-outlined" style="font-size: 400px; font-variation-settings: 'FILL' 1;">monitor_heart</span>
-</div>
+
+<!-- COUNTERS -->
+<section class="section counters-sec">
+  <div class="counters-grid">
+    <div class="count-card" id="cc0"><span class="count-num"><span class="counter" data-t="92.4" data-d="1">0</span><span class="count-unit">%</span></span><div class="count-lbl">AI accuracy</div></div>
+    <div class="count-card" id="cc1"><span class="count-num"><span class="counter" data-t="16" data-d="0">0</span></span><div class="count-lbl">Parameters analyzed</div></div>
+    <div class="count-card" id="cc2"><span class="count-num"><span class="counter" data-t="50" data-d="0">0</span><span class="count-unit">k+</span></span><div class="count-lbl">Validated records</div></div>
+    <div class="count-card" id="cc3"><span class="count-num"><span class="counter" data-t="5" data-d="0">0</span><span class="count-unit">k+</span></span><div class="count-lbl">Physicians trust us</div></div>
+  </div>
 </section>
-<!-- Testimonials -->
-<section class="py-24 px-8" id="reviews">
-<div class="max-w-7xl mx-auto">
-<div class="text-center mb-20">
-<h2 class="text-4xl font-serif font-bold text-primary mb-4">Trusted by Experts and Individuals</h2>
-</div>
-<div class="grid md:grid-cols-3 gap-8">
-<!-- Card 1 -->
-<div class="bg-surface-container-low p-8 rounded-[32px] relative">
-<div class="flex text-tertiary-container mb-4">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-</div>
-<p class="text-on-surface italic text-lg leading-relaxed mb-8">
-                            "HeartGuard's analysis gave me the nudge I needed to see a specialist. Their high-risk alert was spot on—I'm now on a preventative path that likely saved my life."
-                        </p>
-<div class="flex items-center gap-4">
-<img alt="Rajesh Mehta" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a middle-aged professional man with a kind expression in a business-casual outfit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5idR3qfE2AFAXw3PQzfoKBTBJ0MxWRNPKMc7_B4hyKAer0A6i_zC0F7UbLiJmV3FuYig6yoaGvF3Yivp10VcltFvzaMdZbYK42kwQdMc22ncIsrzGz4dVNz5vc_P3jeqBcdxqKBMMQynEd1Qzo9qCVUiMtW6N5uyTTearI435R7ve3GywZTl7FXvM62r7uyuLoMJNgIGvTxi3fT_lSPQYA5nl1IiMTe7VWnTeinpWvGYmTo7rGbY6r7P0m2-I2Kc8cII4Yq1LKuQ"/>
-<div>
-<span class="block font-bold text-primary">Rajesh Mehta</span>
-<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Marketing Director</span>
-</div>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="bg-primary-container p-8 rounded-[32px] text-white relative md:-mt-8">
-<div class="flex text-tertiary-fixed-dim mb-4">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-</div>
-<p class="italic text-lg leading-relaxed mb-8">
-                            "As a clinician, I'm impressed by the depth of parameters HeartGuard correlates. It's an excellent secondary screening tool for patients to monitor themselves between annual visits."
-                        </p>
-<div class="flex items-center gap-4">
-<img alt="Dr. Priya Nair" class="w-12 h-12 rounded-full object-cover" data-alt="close-up portrait of a female doctor in a white clinical coat with a warm smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpQQ3n7ZLMFm-eQLrNOETBWy_Lfkk7C70jXVGMfpQXP-5fTACbcR3cr0VpOipO4-ChwBFQZShyNLP0iCPkt6oaqotOKGbFvkTQTgMWogQkuuMK8hm7rbz0WZsHqCZfcr97M0xi91WwP8iGSeNp9_41ydHuP6R-G3hALfomqvXDgz-34b-iN_f6MOBwsHx1064KlxZYQenYo0DvQifLxES_liEl_gi4wm39LT2_FrHA6hdOIZSeYoC7LkeTornGfcuSODa7FxdDaK0"/>
-<div>
-<span class="block font-bold">Dr. Priya Nair</span>
-<span class="text-xs font-bold uppercase tracking-widest text-primary-fixed">Cardiologist, MD</span>
-</div>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-surface-container-low p-8 rounded-[32px] relative">
-<div class="flex text-tertiary-container mb-4">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-</div>
-<p class="text-on-surface italic text-lg leading-relaxed mb-8">
-                            "The interface is so clean and easy to use. I love how it explains exactly what each metric means for my heart health instead of just giving me raw numbers."
-                        </p>
-<div class="flex items-center gap-4">
-<img alt="Aarav Sharma" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a young athletic man looking confident in a sunlit outdoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATgpsN94F_M3GrXhaVxAtiKcJDnPSUnKtcsFJmV-u2E3OoXm0Qii1Rnij3ClQhXmXZfcZJYLqHfceTf3OaOq503bqvmlmng3ft-d2ViPHvMMzYSdZriJQ2Mp5EQwokraYlfW3IC2a82v6ebQJSQTJn_GmFzINyhQSkXz5_T7nfGspZP3mj1rZN2Eb3TIu2deeSJ6gMLYMK5u6wdtIlEXntI7nRGdPmhKCma7ziA4A7JUSi0QOtF5S4Z0cJ0QVeIc92YBpLeleO-Wo"/>
-<div>
-<span class="block font-bold text-primary">Aarav Sharma</span>
-<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Fitness Instructor</span>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<!-- PARAMETERS -->
+<section class="params-sec" id="params">
+  <canvas class="grid-bg" id="gridBg"></canvas>
+  <div class="params-deco"></div>
+  <div class="params-deco2"></div>
+  <div class="sec-label">Analysis</div>
+  <h2 class="sec-title" style="margin-bottom:8px;">Multi-dimensional analysis</h2>
+  <p class="sec-sub">Our AI synthesizes 16 specific medical parameters to build your unique cardiac fingerprint.</p>
+  <div class="pills-wrap" id="pillsWrap">
+    <div class="pill" data-delay="0">Age</div>
+    <div class="pill" data-delay="60">Blood Pressure</div>
+    <div class="pill" data-delay="120">Cholesterol</div>
+    <div class="pill" data-delay="180">Smoking Status</div>
+    <div class="pill" data-delay="240">BMI Index</div>
+    <div class="pill" data-delay="300">Genetics</div>
+    <div class="pill" data-delay="360">Activity Level</div>
+    <div class="pill" data-delay="420">Glucose Levels</div>
+    <div class="pill" data-delay="480">Alcohol Consumption</div>
+    <div class="pill" data-delay="540">Gender</div>
+    <div class="pill" data-delay="600">Sleep Quality</div>
+    <div class="pill" data-delay="660">Stress Factors</div>
+    <div class="pill" data-delay="720">Dietary Habits</div>
+    <div class="pill" data-delay="780">Current Medications</div>
+    <div class="pill" data-delay="840">Heart Rate</div>
+    <div class="pill" data-delay="900">Age of Diagnosis</div>
+  </div>
 </section>
-<!-- CTA Section -->
-<section class="px-8 pb-24">
-<div class="max-w-7xl mx-auto primary-gradient rounded-[40px] py-20 px-12 text-center text-white relative overflow-hidden">
-<div class="relative z-10">
-<h2 class="text-4xl md:text-6xl font-serif font-black mb-8 leading-tight">Your Heart Deserves Better. <br/>Start Today — Free.</h2>
-<div class="flex flex-col md:flex-row gap-6 justify-center">
-<a href="register.html" class="bg-white text-primary font-bold px-10 py-5 rounded-full hover:scale-105 transition-transform shadow-xl inline-block text-center">
-                            Create Free Account
-                        </a>
-<a href="login.html" class="bg-transparent text-white border-2 border-white/30 font-bold px-10 py-5 rounded-full hover:bg-white/10 transition-colors inline-block text-center">
-                            Already have an account?
-                        </a>
-</div>
-<p class="mt-10 text-primary-fixed-dim text-sm font-medium opacity-80">
-                        No credit card required. Clinical data privacy guaranteed.
-                    </p>
-</div>
-<!-- Abstract Glow -->
-<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary opacity-20 blur-[120px] -mr-64 -mt-64"></div>
-<div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-tertiary-container opacity-10 blur-[120px] -ml-64 -mb-64"></div>
-</div>
+
+<!-- REVIEWS -->
+<section class="section reviews-sec" id="reviews">
+  <div class="sec-label reveal">Testimonials</div>
+  <h2 class="sec-title reveal">Trusted by experts and individuals</h2>
+  <div class="reviews-grid">
+    <div class="review light reveal">
+      <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="review-text">"HeartGuard's analysis gave me the nudge I needed to see a specialist. Their high-risk alert was spot on — I'm now on a preventative path that likely saved my life."</p>
+      <div class="reviewer-row">
+        <div class="avatar" style="background:#dcfce7;color:#166534;">RM</div>
+        <div><div class="rev-name" style="color:var(--g1);">Rajesh Mehta</div><div class="rev-role" style="color:var(--muted);">Marketing Director</div></div>
+      </div>
+    </div>
+    <div class="review dark reveal" style="transition-delay:.15s">
+      <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="review-text">"As a clinician, I'm impressed by the depth of parameters HeartGuard correlates. It's an excellent secondary screening tool for patients to monitor themselves between visits."</p>
+      <div class="reviewer-row">
+        <div class="avatar" style="background:rgba(169,243,197,.15);color:var(--mint);">PN</div>
+        <div><div class="rev-name" style="color:var(--mint);">Dr. Priya Nair</div><div class="rev-role" style="color:rgba(169,243,197,.4);">Cardiologist, MD</div></div>
+      </div>
+    </div>
+    <div class="review light reveal" style="transition-delay:.3s">
+      <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="review-text">"The interface is so clean and easy to use. I love how it explains exactly what each metric means for my heart health instead of just giving me raw numbers."</p>
+      <div class="reviewer-row">
+        <div class="avatar" style="background:#dcfce7;color:#166534;">AS</div>
+        <div><div class="rev-name" style="color:var(--g1);">Aarav Sharma</div><div class="rev-role" style="color:var(--muted);">Fitness Instructor</div></div>
+      </div>
+    </div>
+  </div>
 </section>
-</main>
-<!-- Footer -->
-<footer class="bg-primary text-on-primary py-20 px-8">
-<div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
-<div class="md:col-span-5">
-<span class="text-2xl font-serif font-black text-white mb-6 block">🫀 HeartGuard</span>
-<p class="text-on-primary/60 text-sm leading-relaxed max-w-sm mb-8">
-                    © 2024 HeartGuard AI Intelligence. Medical Disclaimer: This platform provides AI-driven data insights and is not a substitute for professional clinical advice. Always consult with a healthcare professional for diagnosis and treatment.
-                </p>
-<div class="flex gap-4">
-<div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer">
-<span class="material-symbols-outlined text-white text-xl">share</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer">
-<span class="material-symbols-outlined text-white text-xl">medical_information</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer">
-<span class="material-symbols-outlined text-white text-xl">security</span>
-</div>
-</div>
-</div>
-<div class="md:col-span-2">
-<h5 class="text-white font-bold mb-6">Product</h5>
-<ul class="space-y-4 text-on-primary/60 text-sm">
-<li><a class="hover:text-white transition-colors" href="#">How It Works</a></li>
-<li><a class="hover:text-white transition-colors" href="#">Features</a></li>
-<li><a class="hover:text-white transition-colors" href="#">Pricing</a></li>
-<li><a class="hover:text-white transition-colors" href="#">Security</a></li>
-</ul>
-</div>
-<div class="md:col-span-2">
-<h5 class="text-white font-bold mb-6">Support</h5>
-<ul class="space-y-4 text-on-primary/60 text-sm">
-<li><a class="hover:text-white transition-colors" href="#">Contact Support</a></li>
-<li><a class="hover:text-white transition-colors" href="#">Clinical Validation</a></li>
-<li><a class="hover:text-white transition-colors" href="#">Privacy Policy</a></li>
-<li><a class="hover:text-white transition-colors" href="#">Terms of Service</a></li>
-</ul>
-</div>
-<div class="md:col-span-3">
-<h5 class="text-white font-bold mb-6">Stay Informed</h5>
-<p class="text-on-primary/60 text-xs mb-4">Get the latest cardiac research updates.</p>
-<div class="relative">
-<input class="w-full bg-white/5 border-none rounded-full py-3 px-6 text-sm focus:ring-1 focus:ring-white" placeholder="Email Address" type="email"/>
-<button class="absolute right-1 top-1 bottom-1 px-4 rounded-full bg-secondary text-white hover:bg-secondary/80 transition-colors">
-<span class="material-symbols-outlined text-sm">arrow_forward</span>
-</button>
-</div>
-</div>
-</div>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <div class="cta-box reveal">
+    <div class="cta-rings">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+    </div>
+    <h2>Your heart deserves better.<br>Start today — free.</h2>
+    <p>No credit card required. Clinical data privacy guaranteed.</p>
+    <div class="cta-btns">
+      <a href="register.html" class="btn-cta-p">Create Free Account</a>
+<a href="login.html" class="btn-cta-s">Already have an account?</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="foot-logo">HeartGuard</div>
+    <div class="foot-copy">© 2024 HeartGuard AI Intelligence. This platform provides AI-driven insights and is not a substitute for professional clinical advice.</div>
+  </div>
+  <div class="foot-nav">
+    <a href="#">How it works</a>
+    <a href="#">Features</a>
+    <a href="#">Privacy</a>
+    <a href="#">Contact</a>
+  </div>
 </footer>
-</body></html>
+
+<script>
+(function(){
+
+/* ── CURSOR ── */
+const co=document.getElementById('cur-outer'),ci=document.getElementById('cur-inner');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  co.style.left=(mx-18)+'px';co.style.top=(my-18)+'px';
+  ci.style.left=mx+'px';ci.style.top=my+'px';
+});
+setInterval(()=>{
+  cx+=(mx-cx)*.12;cy+=(my-cy)*.12;
+  ci.style.left=cx+'px';ci.style.top=cy+'px';
+},14);
+document.querySelectorAll('button,a,.step,.pill,.review,.stat-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovered'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovered'));
+});
+
+/* ── SCROLL PROGRESS ── */
+const pb=document.getElementById('progress-bar');
+document.addEventListener('scroll',()=>{
+  const st=document.documentElement.scrollTop;
+  const sh=document.documentElement.scrollHeight-window.innerHeight;
+  pb.style.width=(st/sh*100)+'%';
+},true);
+
+/* ── ANIMATED GRID CANVAS ── */
+const gc=document.getElementById('grid-canvas');
+gc.width=window.innerWidth;gc.height=window.innerHeight;
+const gx=gc.getContext('2d');
+let gofs=0;
+function drawGrid(){
+  gx.clearRect(0,0,gc.width,gc.height);
+  gx.strokeStyle='#004328';gx.lineWidth=.5;
+  const sz=48;
+  for(let x=gofs%sz;x<gc.width;x+=sz){gx.beginPath();gx.moveTo(x,0);gx.lineTo(x,gc.height);gx.stroke();}
+  for(let y=gofs%sz;y<gc.height;y+=sz){gx.beginPath();gx.moveTo(0,y);gx.lineTo(gc.width,y);gx.stroke();}
+  gofs+=.15;requestAnimationFrame(drawGrid);
+}
+drawGrid();
+
+/* ── ECG CANVAS ── */
+const ecgC=document.getElementById('ecgCanvas');
+ecgC.width=320;ecgC.height=120;
+const ectx=ecgC.getContext('2d');
+const ecgPts=[0,.5,.5,.4,.42,.38,.35,.28,.2,.08,-.3,-.1,.7,1.0,.6,.1,.05,.02,0,0,0,.1,.05,0];
+let eOfs=0;
+function drawEcg(){
+  ectx.clearRect(0,0,320,120);
+  ectx.strokeStyle='#a9f3c5';ectx.lineWidth=2;ectx.shadowColor='#a9f3c5';ectx.shadowBlur=6;
+  ectx.beginPath();
+  const pts=ecgPts;const n=pts.length;
+  for(let x=0;x<320;x++){
+    const pos=(x*.08+eOfs)%n;
+    const i=Math.floor(pos)%n;const f=pos-Math.floor(pos);
+    const v=pts[i]*(1-f)+pts[(i+1)%n]*f;
+    const y=60-v*40;
+    x===0?ectx.moveTo(x,y):ectx.lineTo(x,y);
+  }
+  ectx.stroke();ectx.shadowBlur=0;
+  eOfs+=.14;requestAnimationFrame(drawEcg);
+}
+drawEcg();
+
+/* ── COUNTER ANIM ── */
+function animNum(el,target,dec,dur=2000){
+  let s=null;
+  function step(ts){
+    if(!s)s=ts;
+    const p=Math.min((ts-s)/dur,1);
+    const e=1-Math.pow(1-p,4);
+    el.textContent=dec?((target*e).toFixed(dec)):Math.round(target*e);
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* HERO counters on load */
+setTimeout(()=>{
+  animNum(document.getElementById('acc'),92.4,1);
+  animNum(document.getElementById('params-n'),16,0);
+  animNum(document.getElementById('rec'),50,0);
+},800);
+
+/* ── INTERSECTION OBSERVER ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const t=e.target;
+    t.classList.add('vis');
+
+    /* counters section */
+    if(t.classList.contains('count-card')){
+      t.querySelectorAll('.counter').forEach(c=>{
+        animNum(c,parseFloat(c.dataset.t),parseInt(c.dataset.d));
+      });
+    }
+
+    /* bars */
+    if(t.classList.contains('stat-card')){
+      setTimeout(()=>{
+        t.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';});
+      },200);
+    }
+
+    obs.unobserve(t);
+  });
+},{threshold:.2});
+
+document.querySelectorAll('.reveal,.feat-item,.stat-card,.count-card').forEach(el=>obs.observe(el));
+
+/* feat items stagger */
+['fi0','fi1','fi2','fi3'].forEach((id,i)=>{
+  const el=document.getElementById(id);
+  const o=new IntersectionObserver(es=>{
+    if(es[0].isIntersecting){setTimeout(()=>el.classList.add('vis'),i*130);o.disconnect();}
+  },{threshold:.2});
+  o.observe(el);
+});
+
+/* stat cards stagger */
+['sc0','sc1','sc2'].forEach((id,i)=>{
+  const el=document.getElementById(id);
+  const o=new IntersectionObserver(es=>{
+    if(es[0].isIntersecting){setTimeout(()=>el.classList.add('vis'),i*160);o.disconnect();}
+  },{threshold:.2});
+  o.observe(el);
+});
+
+/* PILLS stagger on scroll into view */
+const pillsWrap=document.getElementById('pillsWrap');
+const pills=pillsWrap.querySelectorAll('.pill');
+const pillObs=new IntersectionObserver(es=>{
+  if(es[0].isIntersecting){
+    pills.forEach(p=>{
+      setTimeout(()=>p.classList.add('popin'),parseInt(p.dataset.delay));
+    });
+    pillObs.disconnect();
+  }
+},{threshold:.2});
+pillObs.observe(pillsWrap);
+
+/* ── TILT ON HERO CARD ── */
+const lc=document.querySelector('.live-card');
+document.querySelector('.hero').addEventListener('mousemove',e=>{
+  const rect=lc.getBoundingClientRect();
+  const cx2=rect.left+rect.width/2,cy2=rect.top+rect.height/2;
+  const dx=(e.clientX-cx2)/rect.width*14;
+  const dy=(e.clientY-cy2)/rect.height*10;
+  lc.style.transform=`perspective(900px) rotateY(${dx}deg) rotateX(${-dy}deg)`;
+});
+document.querySelector('.hero').addEventListener('mouseleave',()=>{
+  lc.style.transform='perspective(900px) rotateY(0) rotateX(0)';
+});
+lc.style.transition='transform .5s ease';
+
+/* ── STEP CARD HOVER RIPPLE ── */
+document.querySelectorAll('.step').forEach(s=>{
+  s.addEventListener('click',function(e){
+    const r=document.createElement('span');
+    r.style.cssText=`position:absolute;width:8px;height:8px;background:rgba(0,109,68,.18);border-radius:50%;left:${e.offsetX}px;top:${e.offsetY}px;transform:translate(-50%,-50%);animation:ripple .6s ease forwards;pointer-events:none;`;
+    this.appendChild(r);
+    setTimeout(()=>r.remove(),600);
+  });
+});
+if(!document.querySelector('#ripple-kf')){
+  const st=document.createElement('style');
+  st.id='ripple-kf';
+  st.textContent='@keyframes ripple{to{width:180px;height:180px;opacity:0;}}';
+  document.head.appendChild(st);
+}
+
+/* ── NAV ACTIVE ON SCROLL ── */
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(s.getBoundingClientRect().top<200)cur=s.id;});
+  navLinks.forEach(a=>{
+    a.style.color=a.getAttribute('href')==='#'+cur?'var(--mint)':'rgba(169,243,197,.6)';
+  });
+},true);
+
+})();
+</script>

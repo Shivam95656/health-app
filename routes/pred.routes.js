@@ -62,17 +62,43 @@ Provide a structured clinical interpretation with these exact JSON keys:
 Respond with ONLY valid JSON, no markdown fences, no preamble.
 `.trim();
 
-    const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const gemResult   = await geminiModel.generateContent(prompt);
-    const rawText     = gemResult.response.text().trim();
-
+    // Gemini multi-model fallback chain
+    const GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-3.6-flash"];
     let gemini = {};
-    try {
-      gemini = JSON.parse(rawText);
-    } catch {
-      // Fallback if Gemini wraps in ```json
-      const clean = rawText.replace(/```json|```/gi, "").trim();
-      try { gemini = JSON.parse(clean); } catch { gemini = { summary: rawText }; }
+    let lastErr = null;
+
+    for (const modelName of GEMINI_MODELS) {
+      try {
+        console.log(`[pred.routes] Trying Gemini model: ${modelName}`);
+        const geminiModel = genAI.getGenerativeModel({ model: modelName });
+        const gemResult   = await geminiModel.generateContent(prompt);
+        const rawText     = gemResult.response.text().trim();
+
+        try {
+          gemini = JSON.parse(rawText);
+        } catch {
+          const clean = rawText.replace(/```json|```/gi, "").trim();
+          try { gemini = JSON.parse(clean); } catch { gemini = { summary: rawText }; }
+        }
+        console.log(`[pred.routes] ✓ Success with ${modelName}`);
+        break;
+      } catch (err) {
+        lastErr = err;
+        const msg = err.message || "";
+        if (msg.includes("404")) {
+          console.warn(`[pred.routes] ${modelName} → 404 deprecated, skipping`);
+          continue;
+        }
+        if (msg.includes("429")) {
+          console.warn(`[pred.routes] ${modelName} → 429 rate-limited, trying next`);
+          continue;
+        }
+        console.warn(`[pred.routes] ${modelName} failed: ${msg}`);
+      }
+    }
+
+    if (Object.keys(gemini).length === 0 && lastErr) {
+      gemini = { summary: "AI analysis unavailable — " + (lastErr.message || "all models failed") };
     }
 
     return res.json({ ...ml, gemini });

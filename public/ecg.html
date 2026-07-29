@@ -10,8 +10,8 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --blue:        #1d4ed8;
-      --blue-hover:  #1e40af;
+      --blue:        #21c943;
+      --blue-hover:  #2ee540;
       --blue-light:  #eff6ff;
       --blue-mid:    #bfdbfe;
       --border:      #e2e8f0;
@@ -468,7 +468,7 @@
         <div class="card-header">
           <div>
             <div class="card-title">AI Health Insights</div>
-            <div class="card-sub" id="geminiModelLabel">Powered by Google Gemini — interpreted from ECG waveform + profile</div>
+            <div class="card-sub" id="geminiModelLabel">— interpreted from ECG waveform + profile</div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
             <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -529,6 +529,13 @@ function clearAlert() {
 function riskColor(pct) { return pct >= 65 ? "#dc2626" : pct >= 35 ? "#d97706" : "#059669"; }
 function riskClass(pct) { return pct >= 65 ? "high"    : pct >= 35 ? "medium"  : "low"; }
 function riskLabel(pct) { return pct >= 65 ? "High Risk" : pct >= 35 ? "Moderate Risk" : "Low Risk"; }
+function safeNumber(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+function clamp(value, min, max) {
+  return Math.min(Math.max(safeNumber(value, min), min), max);
+}
 function labelBadgeClass(label = "") {
   const l = label.toLowerCase();
   if (!l || l === "normal" || l === "n") return "normal";
@@ -761,14 +768,17 @@ function renderResults(data) {
   // Factor bars
   const fbEl = document.getElementById("factorBars");
   if (factors.length) {
-    const maxVal = Math.max(...factors.map(f => f.importance ?? f.value ?? 0));
-    fbEl.innerHTML = factors.map(f => {
-      const val  = f.importance ?? f.value ?? 0;
-      const pct2 = maxVal > 0 ? Math.round((val / maxVal) * 100) : 0;
+    const safeFactors = factors.map(f => {
+      const val = clamp(safeNumber(f.importance ?? f.value ?? 0), 0, 100);
+      return { ...f, val };
+    });
+    const maxVal = Math.max(...safeFactors.map(f => f.val));
+    fbEl.innerHTML = safeFactors.map(f => {
+      const pct2 = maxVal > 0 ? Math.round((f.val / maxVal) * 100) : 0;
       return `<div class="factor-row">
         <div class="factor-label">${f.label || f.name}</div>
         <div class="factor-bar-wrap"><div class="factor-bar" style="width:${pct2}%;background:${f.color||riskColor(pct2)};"></div></div>
-        <div class="factor-val">${typeof val==="number" ? val.toFixed(1) : val}</div>
+        <div class="factor-val">${f.val}%</div>
       </div>`;
     }).join("");
   } else {
@@ -794,6 +804,7 @@ function renderResults(data) {
 
   // Gemini panel
   document.getElementById("geminiPanel").innerHTML = `
+    ${gemini.gemini_error ? `<div class="gemini-error">Gemini fallback: ${gemini.gemini_error}</div>` : ""}
     ${gemini.ecgInterpretation ? `<div class="gemini-ecg-interp"><svg viewBox="0 0 24 24"><path d="M3 12h3l3-9 4 18 3-9h5"/></svg><div><strong>ECG Interpretation:</strong> ${gemini.ecgInterpretation}</div></div>` : ""}
     ${gemini.summary ? `<p class="gemini-summary">${gemini.summary}</p>` : ""}
     ${gemini.primaryConcern ? `<div class="gemini-concern">⚠️ Primary Concern: ${gemini.primaryConcern}</div>` : ""}
@@ -858,23 +869,143 @@ function closeInsertModal() { document.getElementById("insertModal").classList.r
 function closeOnBackdrop(e) { if (e.target === document.getElementById("insertModal")) closeInsertModal(); }
 
 function fillSyntheticECG() {
-  const sr = parseInt(document.getElementById("ins_sr").value) || 360;
-  const dur = parseFloat(document.getElementById("ins_dur").value) || 10;
-  const hr  = parseInt(document.getElementById("ins_hr").value) || 72;
-  const n   = Math.round(sr * dur);
-  const period  = sr * 60 / hr;
+  const sr    = parseInt(document.getElementById("ins_sr").value) || 360;
+  const dur   = parseFloat(document.getElementById("ins_dur").value) || 10;
+  const hr    = parseInt(document.getElementById("ins_hr").value) || 72;
+  const label = (document.getElementById("ins_label").value || "Normal").toLowerCase();
+  const n     = Math.round(sr * dur);
+
+  /* ── Utility helpers ── */
+  const rand  = (lo, hi) => lo + Math.random() * (hi - lo);
+  const gauss = () => { let u=0,v=0; while(!u) u=Math.random(); v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const sinP  = (phase, start, width) => (phase >= start && phase < start+width) ? Math.sin(Math.PI * (phase-start)/width) : 0;
+
+  /* ── Per-run randomisation seeds ── */
+  const ampScale     = rand(0.85, 1.25);            // overall amplitude variation
+  const baselineFreq = rand(0.08, 0.25);             // baseline wander frequency (Hz)
+  const baselineAmp  = rand(0.02, 0.08);             // baseline wander amplitude
+  const noiseLevel   = rand(0.008, 0.035);            // high-freq noise
+  const pAmp         = rand(0.10, 0.22) * ampScale;   // P-wave amplitude
+  const qrsAmp       = rand(0.95, 1.40) * ampScale;   // QRS amplitude
+  const tAmp         = rand(0.20, 0.45) * ampScale;   // T-wave amplitude
+  const qDepth       = rand(0.06, 0.15) * ampScale;   // Q-wave depth
+  const sDepth       = rand(0.08, 0.20) * ampScale;   // S-wave depth
+
+  /* ── Label-specific modifiers ── */
+  const isAFIB   = label.includes("afib");
+  const isSTElev = label.includes("st-elev") || label.includes("st elev");
+  const isSTDep  = label.includes("st-dep") || label.includes("st dep");
+  const isTWave  = label.includes("t-wave") || label.includes("t wave");
+  const isPVC    = label === "pvc";
+  const isSVT    = label === "svt";
+  const isLVH    = label === "lvh";
+  const isLBBB   = label === "lbbb";
+
+  // For SVT, override to a faster rate
+  const effectiveHR = isSVT ? Math.max(hr, rand(140, 180)) : hr;
+  const basePeriod  = sr * 60 / effectiveHR;
+
   const samples = [];
+  let   beatIdx = 0;
+  let   nextBeat = 0;              // sample index where the next beat starts
+  let   currentPeriod = basePeriod; // can vary for AFIB
+
   for (let i = 0; i < n; i++) {
-    const phase = (i % period) / period;
+    /* ── Determine current beat boundary ── */
+    if (i >= nextBeat) {
+      beatIdx++;
+      if (isAFIB) {
+        // Irregular R-R intervals for AFIB (±25–40%)
+        currentPeriod = basePeriod * rand(0.60, 1.40);
+      } else {
+        // Normal slight HRV (±3%)
+        currentPeriod = basePeriod * rand(0.97, 1.03);
+      }
+      nextBeat = i + Math.round(currentPeriod);
+    }
+
+    const phase = ((i - (nextBeat - Math.round(currentPeriod))) % Math.round(currentPeriod)) / Math.round(currentPeriod);
     let v = 0;
-    if (phase >= 0.05 && phase < 0.15) v += 0.15 * Math.sin(Math.PI * (phase-0.05)/0.10);
-    if (phase >= 0.20 && phase < 0.23) v -= 0.10;
-    if (phase >= 0.23 && phase < 0.27) v += 1.20 * Math.sin(Math.PI * (phase-0.23)/0.04);
-    if (phase >= 0.27 && phase < 0.30) v -= 0.15;
-    if (phase >= 0.35 && phase < 0.55) v += 0.35 * Math.sin(Math.PI * (phase-0.35)/0.20);
-    v += (Math.random()-0.5) * 0.025;
+
+    /* ── Is this beat a PVC? ── */
+    const isPVCBeat = isPVC && (beatIdx % Math.round(rand(3, 6)) === 0);
+
+    if (isPVCBeat) {
+      // PVC: wide, tall, bizarre QRS with no preceding P-wave
+      const pvcAmp = qrsAmp * rand(1.5, 2.2);
+      if (phase >= 0.15 && phase < 0.45) {
+        v += pvcAmp * Math.sin(Math.PI * (phase - 0.15) / 0.30) * (phase < 0.25 ? -1 : 1);
+      }
+      // Compensatory pause — mostly flat after PVC
+      v += gauss() * noiseLevel * 1.5;
+    } else {
+      /* ── P-wave ── */
+      if (!isAFIB) {
+        // Normal P-wave (absent in AFIB)
+        v += pAmp * sinP(phase, 0.06, 0.10);
+      } else {
+        // AFIB: fibrillatory baseline instead of P-wave
+        v += rand(-0.04, 0.04) * Math.sin(rand(15, 30) * Math.PI * phase);
+      }
+
+      /* ── PR segment (flat) ── */
+
+      /* ── Q-wave ── */
+      v -= qDepth * sinP(phase, 0.20, 0.025);
+
+      /* ── R-wave (QRS upstroke) ── */
+      const qrsWidth = isLBBB ? 0.07 : 0.035;
+      v += qrsAmp * sinP(phase, 0.225, qrsWidth);
+
+      /* ── S-wave ── */
+      const sStart = isLBBB ? 0.295 : 0.26;
+      v -= sDepth * sinP(phase, sStart, 0.03);
+
+      /* ── LVH: taller R-wave, deeper S ── */
+      if (isLVH) {
+        v += 0.3 * ampScale * sinP(phase, 0.225, 0.035);
+        v -= 0.12 * ampScale * sinP(phase, 0.26, 0.03);
+      }
+
+      /* ── LBBB: notched R-wave (M-shape) ── */
+      if (isLBBB && phase >= 0.25 && phase < 0.28) {
+        v -= 0.2 * ampScale * sinP(phase, 0.25, 0.03);
+      }
+
+      /* ── ST segment modifiers ── */
+      if (isSTElev) {
+        // ST-elevation: raised plateau after QRS
+        v += rand(0.15, 0.35) * ampScale * sinP(phase, 0.30, 0.12);
+      } else if (isSTDep) {
+        // ST-depression: depressed segment
+        v -= rand(0.10, 0.25) * ampScale * sinP(phase, 0.30, 0.12);
+      }
+
+      /* ── T-wave ── */
+      if (isTWave) {
+        // T-wave inversion
+        v -= tAmp * sinP(phase, 0.38, 0.18);
+      } else {
+        // Normal upright T-wave
+        v += tAmp * sinP(phase, 0.38, 0.18);
+      }
+
+      /* ── ST-elevation can merge T-wave upward ── */
+      if (isSTElev) {
+        v += rand(0.05, 0.15) * ampScale * sinP(phase, 0.42, 0.12);
+      }
+    }
+
+    /* ── Baseline wander ── */
+    const t = i / sr;
+    v += baselineAmp * Math.sin(2 * Math.PI * baselineFreq * t + rand(0, 6.28));
+
+    /* ── High-frequency noise ── */
+    v += gauss() * noiseLevel;
+
     samples.push(parseFloat(v.toFixed(4)));
   }
+
   document.getElementById("ins_samples").value = JSON.stringify(samples);
 }
 

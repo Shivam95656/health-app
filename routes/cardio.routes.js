@@ -65,7 +65,9 @@ async function mlPredict(payload) {
   return r.json();
 }
 
-/** Gemini clinical interpretation */
+/** Gemini clinical interpretation (multi-model fallback) */
+const GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-3.6-flash"];
+
 async function geminiAnalyze(row, ml) {
   const flagList     = (ml.flagged_features || []).map(f => `${f.label}: ${f.value}`).join(", ") || "None";
   const diseaseList  = (ml.disease_breakdown || []).map(d => `${d.name} (${d.pct}%)`).join(", ");
@@ -96,16 +98,43 @@ Return ONLY this JSON (no markdown):
   "disclaimer": "one-line medical disclaimer"
 }`.trim();
 
-  const model   = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-  const result  = await model.generateContent(prompt);
-  const rawText = result.response.text().trim();
+  for (const modelName of GEMINI_MODELS) {
+    try {
+      console.log(`[cardio.routes] Trying Gemini: ${modelName}`);
+      const model   = genAI.getGenerativeModel({ model: modelName });
+      const result  = await model.generateContent(prompt);
+      const rawText = result.response.text().trim();
 
-  try {
-    return JSON.parse(rawText);
-  } catch {
-    const clean = rawText.replace(/```json|```/gi, "").trim();
-    try { return JSON.parse(clean); } catch { return { summary: rawText }; }
+      try {
+        const parsed = JSON.parse(rawText);
+        console.log(`[cardio.routes] ✓ Success with ${modelName}`);
+        return parsed;
+      } catch {
+        const clean = rawText.replace(/```json|```/gi, "").trim();
+        try {
+          const parsed = JSON.parse(clean);
+          console.log(`[cardio.routes] ✓ Success with ${modelName}`);
+          return parsed;
+        } catch {
+          console.log(`[cardio.routes] ✓ ${modelName} returned non-JSON, using raw text`);
+          return { summary: rawText };
+        }
+      }
+    } catch (err) {
+      const msg = err.message || "";
+      if (msg.includes("404")) {
+        console.warn(`[cardio.routes] ${modelName} → 404 deprecated, skipping`);
+        continue;
+      }
+      if (msg.includes("429")) {
+        console.warn(`[cardio.routes] ${modelName} → 429 rate-limited, trying next`);
+        continue;
+      }
+      console.warn(`[cardio.routes] ${modelName} failed: ${msg}`);
+    }
   }
+
+  throw new Error("All Gemini models failed");
 }
 
 /* ── GET /cardio/patients ─────────────────────────────────────────────── */
@@ -172,9 +201,17 @@ router.get("/patient/:id", async (req, res) => {
     const row     = rows[0];
     const payload = buildPayload(row);
     const ml      = await mlPredict(payload);
-    const gemini  = await geminiAnalyze(row, ml);
 
-    res.json({ row, payload_used: payload, ...ml, gemini });
+    // ── Gemini is optional — never crash the whole response if it fails ──
+    let gemini      = null;
+    let geminiError = null;
+    try {
+      gemini = await geminiAnalyze(row, ml);
+    } catch (gErr) {
+      geminiError = gErr.message || "Gemini unavailable";
+    }
+
+    res.json({ row, payload_used: payload, ...ml, gemini, geminiError });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -199,9 +236,17 @@ router.get("/latest", async (req, res) => {
     const row     = rows[0];
     const payload = buildPayload(row);
     const ml      = await mlPredict(payload);
-    const gemini  = await geminiAnalyze(row, ml);
 
-    res.json({ row, payload_used: payload, ...ml, gemini });
+    // ── Gemini is optional — never crash the whole response if it fails ──
+    let gemini      = null;
+    let geminiError = null;
+    try {
+      gemini = await geminiAnalyze(row, ml);
+    } catch (gErr) {
+      geminiError = gErr.message || "Gemini unavailable";
+    }
+
+    res.json({ row, payload_used: payload, ...ml, gemini, geminiError });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

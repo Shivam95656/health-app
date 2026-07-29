@@ -20,6 +20,14 @@ function riskLabel(pct) {
   return               ["low",    "Low Risk"];
 }
 
+function safeNumber(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+function clamp(value, min, max) {
+  return Math.min(Math.max(safeNumber(value, min), min), max);
+}
+
 // ─────────────────────────────────────────────
 // ML RISK SCORE  (logistic-style clinical weights)
 // ─────────────────────────────────────────────
@@ -112,15 +120,24 @@ function computeDiseaseBreakdown(profile, iot, overallRisk) {
 // FACTOR CONTRIBUTIONS
 // ─────────────────────────────────────────────
 function getFactors(profile, iot) {
+  const age = safeNumber(profile.age, 0);
+  const cp = safeNumber(profile.cp, 0);
+  const trestbps = safeNumber(profile.trestbps, 120);
+  const chol = safeNumber(profile.chol, 180);
+  const thalach = safeNumber(iot.thalach, 72);
+  const spo2 = safeNumber(iot.spo2, 98);
+  const oldpeak = safeNumber(profile.oldpeak, 0);
+  const restecg = safeNumber(profile.restecg, 0);
+
   return [
-    { name: "Age",            val: profile.age > 55 ? 85 : profile.age > 45 ? 55 : 25, color: "#3b82f6" },
-    { name: "Chest Pain",     val: [60, 35, 20, 5][profile.cp] || 5,                    color: "#f59e0b" },
-    { name: "Blood Pressure", val: Math.min(Math.round((profile.trestbps - 80) / 1.4), 99), color: "#ef4444" },
-    { name: "Cholesterol",    val: Math.min(Math.round((profile.chol - 120) / 2.2),    99), color: "#8b5cf6" },
-    { name: "Heart Rate",     val: Math.max(0, Math.round((200 - iot.thalach) / 1.5)),      color: "#06b6d4" },
-    { name: "SpO2",           val: Math.max(0, Math.round((100 - iot.spo2) * 5)),            color: "#10b981" },
-    { name: "ST Depression",  val: Math.min(Math.round(profile.oldpeak * 25),          99), color: "#f97316" },
-    { name: "ECG Result",     val: [10, 40, 75][profile.restecg] || 10,                      color: "#ec4899" }
+    { name: "Age",            val: age > 55 ? 85 : age > 45 ? 55 : 25, color: "#3b82f6" },
+    { name: "Chest Pain",     val: [60, 35, 20, 5][cp] || 5,                    color: "#f59e0b" },
+    { name: "Blood Pressure", val: clamp(Math.round((trestbps - 80) / 1.4), 0, 99), color: "#ef4444" },
+    { name: "Cholesterol",    val: clamp(Math.round((chol - 120) / 2.2), 0, 99),    color: "#8b5cf6" },
+    { name: "Heart Rate",     val: clamp(Math.round((200 - thalach) / 1.5), 0, 99),      color: "#06b6d4" },
+    { name: "SpO2",           val: clamp(Math.round((100 - spo2) * 5), 0, 99),            color: "#10b981" },
+    { name: "ST Depression",  val: clamp(Math.round(oldpeak * 25), 0, 99),          color: "#f97316" },
+    { name: "ECG Result",     val: clamp([10, 40, 75][restecg] || 10, 0, 99),                      color: "#ec4899" }
   ];
 }
 
@@ -129,7 +146,11 @@ function getFactors(profile, iot) {
 // ─────────────────────────────────────────────
 function renderFactors(factors) {
   const el = document.getElementById("factorBars");
-  el.innerHTML = factors.map(f => `
+  const safeFactors = factors.map(f => {
+    const raw = safeNumber(f.importance ?? f.value ?? 0, 0);
+    return { ...f, val: clamp(raw, 0, 100) };
+  });
+  el.innerHTML = safeFactors.map(f => `
     <div class="factor-row">
       <span class="factor-name">${f.name}</span>
       <div class="factor-track">
@@ -183,6 +204,12 @@ function renderDiseaseDonut(breakdown) {
 // ─────────────────────────────────────────────
 function renderBarChart(profile, iot) {
   if (barChartInst) barChartInst.destroy();
+  const heartRate = clamp(safeNumber(iot.thalach, 0), 0, 220);
+  const spo2 = clamp(safeNumber(iot.spo2, 0), 0, 100);
+  const bp = clamp(safeNumber(profile.trestbps, 0), 0, 220);
+  const chol = clamp(Math.round(safeNumber(profile.chol, 0) / 3), 0, 120);
+  const stDepress = clamp(Math.round(safeNumber(profile.oldpeak, 0) * 15), 0, 100);
+
   barChartInst = new Chart(document.getElementById("barChart").getContext("2d"), {
     type: "bar",
     data: {
@@ -190,7 +217,7 @@ function renderBarChart(profile, iot) {
       datasets: [
         {
           label: "Your Reading",
-          data: [iot.thalach, iot.spo2, profile.trestbps, Math.round(profile.chol / 3), Math.round(profile.oldpeak * 15)],
+          data: [heartRate, spo2, bp, chol, stDepress],
           backgroundColor: ["#3b82f6","#10b981","#ef4444","#8b5cf6","#f97316"],
           borderRadius: 5, borderSkipped: false
         },
@@ -220,21 +247,21 @@ function renderBarChart(profile, iot) {
 // ─────────────────────────────────────────────
 function renderRadarChart(profile, iot) {
   if (radarChartInst) radarChartInst.destroy();
+  const heartRate = clamp(Math.round(safeNumber(iot.thalach, 0) / 2.2), 0, 100);
+  const spo2 = clamp(safeNumber(iot.spo2, 0), 0, 100);
+  const temp = clamp(Math.round(safeNumber(iot.temperature, 36) * 2.5), 0, 100);
+  const bp = clamp(Math.round(safeNumber(profile.trestbps, 120) / 2), 0, 100);
+  const chol = clamp(Math.round(safeNumber(profile.chol, 180) / 6), 0, 100);
+  const stDepress = clamp(Math.round(safeNumber(profile.oldpeak, 0) * 15), 0, 100);
+  const ageFactor = clamp(Math.min(safeNumber(profile.age, 40), 80), 0, 80);
+
   radarChartInst = new Chart(document.getElementById("radarChart").getContext("2d"), {
     type: "radar",
     data: {
       labels: ["Heart Rate", "SpO2", "Temp", "BP", "Cholesterol", "ST Depress.", "Age Factor"],
       datasets: [{
         label: "Your Profile",
-        data: [
-          Math.round(iot.thalach / 2.2),
-          iot.spo2,
-          Math.round(iot.temperature * 2.5),
-          Math.round(profile.trestbps / 2),
-          Math.round(profile.chol / 6),
-          Math.round(profile.oldpeak * 15),
-          Math.min(profile.age, 80)
-        ],
+        data: [heartRate, spo2, temp, bp, chol, stDepress, ageFactor],
         backgroundColor: "rgba(29,78,216,0.1)",
         borderColor: "#1d4ed8",
         pointBackgroundColor: "#1d4ed8",

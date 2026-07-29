@@ -1,4 +1,10 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>HeartGuard — AI Cardiac Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:wght@400;500;700;900&display=swap" rel="stylesheet"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:wght@400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -31,7 +37,7 @@ nav{position:relative;z-index:50;background:rgba(0,43,26,.92);backdrop-filter:bl
 .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--mint);transition:width .35s cubic-bezier(.4,0,.2,1);}
 .nav-links a:hover{color:var(--mint);}
 .nav-links a:hover::after{width:100%;}
-.btn-nav{background:var(--g4);color:var(--mint);padding:11px 28px;border-radius:999px;font-weight:700;font-size:14px;border:none;cursor:none;letter-spacing:.04em;position:relative;overflow:hidden;transition:transform .2s;}
+.btn-nav{background:var(--g4);color:var(--mint);padding:11px 28px;border-radius:999px;font-weight:700;font-size:14px;border:none;cursor:none;letter-spacing:.04em;position:relative;overflow:hidden;transition:transform .2s;text-decoration:none;display:inline-block;}
 .btn-nav::before{content:'';position:absolute;inset:0;background:var(--mint);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.4,0,.2,1);}
 .btn-nav:hover{transform:scale(1.04);}
 .btn-nav:hover::before{transform:scaleX(1);}
@@ -57,11 +63,11 @@ nav{position:relative;z-index:50;background:rgba(0,43,26,.92);backdrop-filter:bl
 @keyframes heroTitle{from{opacity:0;transform:translateY(40px) skewY(2deg);}to{opacity:1;transform:none;}}
 .hero-sub{font-size:17px;color:rgba(169,243,197,.5);max-width:460px;line-height:1.75;margin-bottom:44px;animation:heroTitle .9s .4s ease both;}
 .hero-ctas{display:flex;gap:18px;align-items:center;animation:heroTitle .9s .6s ease both;}
-.btn-hero{background:var(--mint);color:var(--g1);padding:15px 36px;border-radius:999px;font-weight:900;font-size:15px;border:none;cursor:none;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.btn-hero{background:var(--mint);color:var(--g1);padding:15px 36px;border-radius:999px;font-weight:900;font-size:15px;border:none;cursor:none;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-block;}
 .btn-hero::after{content:'';position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .3s;}
 .btn-hero:hover{transform:scale(1.06);box-shadow:0 12px 40px rgba(169,243,197,.35);}
 .btn-hero:hover::after{opacity:.1;}
-.btn-hero-ghost{padding:15px 36px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(169,243,197,.3);color:var(--mint);background:transparent;cursor:none;transition:border-color .3s,background .3s;}
+.btn-hero-ghost{padding:15px 36px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(169,243,197,.3);color:var(--mint);background:transparent;cursor:none;transition:border-color .3s,background .3s;text-decoration:none;display:inline-block;}
 .btn-hero-ghost:hover{border-color:var(--mint);background:rgba(169,243,197,.08);}
 
 /* ── HERO RIGHT: LIVE CARD ── */
@@ -85,6 +91,7 @@ nav{position:relative;z-index:50;background:rgba(0,43,26,.92);backdrop-filter:bl
 /* ── TICKER ── */
 .ticker-wrap{background:var(--g3);overflow:hidden;padding:13px 0;border-top:1px solid rgba(169,243,197,.1);border-bottom:1px solid rgba(169,243,197,.1);position:relative;z-index:10;}
 .ticker-inner{display:flex;white-space:nowrap;animation:scroll 22s linear infinite;}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 .tick-item{display:inline-flex;align-items:center;gap:8px;padding:0 36px;font-size:13px;font-weight:700;letter-spacing:.07em;color:var(--mint);text-transform:uppercase;}
 .tick-sep{display:inline-block;width:5px;height:5px;background:rgba(169,243,197,.4);border-radius:50%;}
 
@@ -192,9 +199,9 @@ nav{position:relative;z-index:50;background:rgba(0,43,26,.92);backdrop-filter:bl
 .cta-box h2{font-family:'Fraunces',serif;font-size:clamp(36px,4vw,60px);font-weight:900;color:var(--mint);margin-bottom:16px;position:relative;z-index:1;line-height:1.15;}
 .cta-box p{color:rgba(169,243,197,.45);font-size:15px;margin-bottom:44px;position:relative;z-index:1;}
 .cta-btns{display:flex;gap:18px;justify-content:center;position:relative;z-index:1;}
-.btn-cta-p{background:var(--mint);color:var(--g1);padding:16px 40px;border-radius:999px;font-weight:900;font-size:15px;border:none;cursor:none;transition:transform .2s,box-shadow .2s;}
+.btn-cta-p{background:var(--mint);color:var(--g1);padding:16px 40px;border-radius:999px;font-weight:900;font-size:15px;border:none;cursor:none;transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-block;}
 .btn-cta-p:hover{transform:scale(1.06);box-shadow:0 14px 44px rgba(169,243,197,.3);}
-.btn-cta-s{background:transparent;color:var(--mint);padding:16px 40px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(169,243,197,.3);cursor:none;transition:background .3s,border-color .3s;}
+.btn-cta-s{background:transparent;color:var(--mint);padding:16px 40px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(169,243,197,.3);cursor:none;transition:background .3s,border-color .3s;text-decoration:none;display:inline-block;}
 .btn-cta-s:hover{background:rgba(169,243,197,.08);border-color:rgba(169,243,197,.5);}
 .cta-rings{position:absolute;inset:0;pointer-events:none;}
 .ring{position:absolute;border:1px solid rgba(169,243,197,.05);border-radius:50%;animation:ringPulse 4s ease-in-out infinite;}
@@ -221,7 +228,8 @@ footer{background:var(--g2);padding:60px;display:flex;justify-content:space-betw
 /* ── ANIMATED GRID BG (canvas) ── */
 #grid-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.04;}
 </style>
-
+</head>
+<body>
 <div id="cur-outer"></div>
 <div id="cur-inner"></div>
 <div id="progress-bar"></div>
@@ -243,7 +251,7 @@ footer{background:var(--g2);padding:60px;display:flex;justify-content:space-betw
     <li><a href="#params">Parameters</a></li>
     <li><a href="#reviews">Reviews</a></li>
   </ul>
-  <button class="btn-nav"><span>Get Started Free</span></button>
+  <a href="register.html" class="btn-nav"><span>Get Started Free</span></a>
 </nav>
 
 <!-- HERO -->
@@ -256,8 +264,8 @@ footer{background:var(--g2);padding:60px;display:flex;justify-content:space-betw
     <h1>Predict Heart Disease<em>Before It Strikes</em></h1>
     <p class="hero-sub">Harness clinically-validated machine learning to analyze vital cardiac signals in real time. Proactive intelligence for a longer life.</p>
     <div class="hero-ctas">
-      <button class="btn-hero">Start Free Assessment</button>
-      <button class="btn-hero-ghost">View Live Demo</button>
+      <a href="register.html" class="btn-hero">Start Free Assessment</a>
+      <a href="login.html" class="btn-hero-ghost">Sign In</a>
     </div>
   </div>
   <div class="hero-right">
@@ -278,7 +286,7 @@ footer{background:var(--g2);padding:60px;display:flex;justify-content:space-betw
   <div class="ticker-inner" id="tick">
     <span class="tick-item">Cardiac AI <span class="tick-sep"></span></span>
     <span class="tick-item">92.4% Accuracy <span class="tick-sep"></span></span>
-    <span class="tick-item">16 Parameters <span class="tick-sep"></span>
+    <span class="tick-item">16 Parameters <span class="tick-sep"></span></span>
     <span class="tick-item">HIPAA Compliant <span class="tick-sep"></span></span>
     <span class="tick-item">Real-Time Analysis <span class="tick-sep"></span></span>
     <span class="tick-item">50k+ Records <span class="tick-sep"></span></span>
@@ -434,37 +442,6 @@ footer{background:var(--g2);padding:60px;display:flex;justify-content:space-betw
   </div>
 </section>
 
-<!-- REVIEWS -->
-<section class="section reviews-sec" id="reviews">
-  <div class="sec-label reveal">Testimonials</div>
-  <h2 class="sec-title reveal">Trusted by experts and individuals</h2>
-  <div class="reviews-grid">
-    <div class="review light reveal">
-      <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-      <p class="review-text">"HeartGuard's analysis gave me the nudge I needed to see a specialist. Their high-risk alert was spot on — I'm now on a preventative path that likely saved my life."</p>
-      <div class="reviewer-row">
-        <div class="avatar" style="background:#dcfce7;color:#166534;">RM</div>
-        <div><div class="rev-name" style="color:var(--g1);">Rajesh Mehta</div><div class="rev-role" style="color:var(--muted);">Marketing Director</div></div>
-      </div>
-    </div>
-    <div class="review dark reveal" style="transition-delay:.15s">
-      <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-      <p class="review-text">"As a clinician, I'm impressed by the depth of parameters HeartGuard correlates. It's an excellent secondary screening tool for patients to monitor themselves between visits."</p>
-      <div class="reviewer-row">
-        <div class="avatar" style="background:rgba(169,243,197,.15);color:var(--mint);">PN</div>
-        <div><div class="rev-name" style="color:var(--mint);">Dr. Priya Nair</div><div class="rev-role" style="color:rgba(169,243,197,.4);">Cardiologist, MD</div></div>
-      </div>
-    </div>
-    <div class="review light reveal" style="transition-delay:.3s">
-      <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-      <p class="review-text">"The interface is so clean and easy to use. I love how it explains exactly what each metric means for my heart health instead of just giving me raw numbers."</p>
-      <div class="reviewer-row">
-        <div class="avatar" style="background:#dcfce7;color:#166534;">AS</div>
-        <div><div class="rev-name" style="color:var(--g1);">Aarav Sharma</div><div class="rev-role" style="color:var(--muted);">Fitness Instructor</div></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- CTA -->
 <section class="cta-sec">
@@ -478,7 +455,7 @@ footer{background:var(--g2);padding:60px;display:flex;justify-content:space-betw
     <p>No credit card required. Clinical data privacy guaranteed.</p>
     <div class="cta-btns">
       <a href="register.html" class="btn-cta-p">Create Free Account</a>
-<a href="login.html" class="btn-cta-s">Already have an account?</a>
+      <a href="login.html" class="btn-cta-s">Already have an account?</a>
     </div>
   </div>
 </section>
@@ -589,28 +566,22 @@ const obs=new IntersectionObserver(entries=>{
     if(!e.isIntersecting)return;
     const t=e.target;
     t.classList.add('vis');
-
-    /* counters section */
     if(t.classList.contains('count-card')){
       t.querySelectorAll('.counter').forEach(c=>{
         animNum(c,parseFloat(c.dataset.t),parseInt(c.dataset.d));
       });
     }
-
-    /* bars */
     if(t.classList.contains('stat-card')){
       setTimeout(()=>{
         t.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';});
       },200);
     }
-
     obs.unobserve(t);
   });
 },{threshold:.2});
 
 document.querySelectorAll('.reveal,.feat-item,.stat-card,.count-card').forEach(el=>obs.observe(el));
 
-/* feat items stagger */
 ['fi0','fi1','fi2','fi3'].forEach((id,i)=>{
   const el=document.getElementById(id);
   const o=new IntersectionObserver(es=>{
@@ -619,7 +590,6 @@ document.querySelectorAll('.reveal,.feat-item,.stat-card,.count-card').forEach(e
   o.observe(el);
 });
 
-/* stat cards stagger */
 ['sc0','sc1','sc2'].forEach((id,i)=>{
   const el=document.getElementById(id);
   const o=new IntersectionObserver(es=>{
@@ -628,7 +598,6 @@ document.querySelectorAll('.reveal,.feat-item,.stat-card,.count-card').forEach(e
   o.observe(el);
 });
 
-/* PILLS stagger on scroll into view */
 const pillsWrap=document.getElementById('pillsWrap');
 const pills=pillsWrap.querySelectorAll('.pill');
 const pillObs=new IntersectionObserver(es=>{
@@ -655,7 +624,6 @@ document.querySelector('.hero').addEventListener('mouseleave',()=>{
 });
 lc.style.transition='transform .5s ease';
 
-/* ── STEP CARD HOVER RIPPLE ── */
 document.querySelectorAll('.step').forEach(s=>{
   s.addEventListener('click',function(e){
     const r=document.createElement('span');
@@ -671,7 +639,6 @@ if(!document.querySelector('#ripple-kf')){
   document.head.appendChild(st);
 }
 
-/* ── NAV ACTIVE ON SCROLL ── */
 const sections=document.querySelectorAll('section[id]');
 const navLinks=document.querySelectorAll('.nav-links a');
 window.addEventListener('scroll',()=>{
@@ -684,3 +651,5 @@ window.addEventListener('scroll',()=>{
 
 })();
 </script>
+</body>
+</html>
